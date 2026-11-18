@@ -586,6 +586,48 @@ a,button,.qitem,.tcard,.kind,.bin{-webkit-tap-highlight-color:transparent}
 .bins.wide{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
 .tcard .two{display:block;line-height:1.45}
 .tcard .two .m{display:block}
+/* ---------- Probeschularbeit ---------- */
+.probecta{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:22px 0 4px;padding:16px 20px;border:1.5px solid var(--lvX);border-radius:14px;background:color-mix(in srgb,var(--lvX) 7%,var(--panel))}
+.probecta b{display:block;font-size:calc(19px*var(--z));letter-spacing:-.02em}
+.probecta span{color:var(--ink-2);font-size:calc(15.5px*var(--z))}
+.btn{text-decoration:none}
+.pform{display:grid;gap:14px;margin-top:22px;max-width:860px}
+.prow{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.prow.col{display:block}
+.prow b{display:block}
+.pd{display:block;color:var(--ink-2);font-size:calc(14.5px*var(--z));max-width:50ch}
+.prow.col .kinds{margin:12px 0 0}
+.pcuts{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:12px}
+.pcuts label{display:flex;align-items:center;gap:8px;font-size:calc(14.5px*var(--z))}
+.pcuts input{width:66px;min-height:36px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);padding:0 8px;text-align:center}
+.pstart{margin-top:22px}
+.pbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:9px 14px;margin:18px 0 8px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px}
+body.nar .pbar{top:48px}
+.pbar .sp{flex:1}
+.ptime{font:700 calc(18px*var(--z)) var(--ff-ui);font-variant-numeric:tabular-nums}
+.ptime.low{color:var(--gold)}
+.pconf{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;border:1.5px solid var(--gold);border-radius:12px;padding:10px 14px;margin:8px 0;background:color-mix(in srgb,var(--gold) 9%,var(--panel));font-size:calc(15px*var(--z))}
+.pconf span{flex:1 1 260px}
+.pend{display:flex;justify-content:flex-end;margin:24px 0 48px}
+.pt2{margin-top:22px;display:grid;gap:14px}
+.probe .tparts{margin-top:14px}
+.ex .badge.lv{display:none}
+.presult{margin:20px 0 10px;background:var(--panel);border:1.5px solid var(--ink);border-radius:14px;padding:20px 22px;display:grid;gap:14px}
+.presult h2{font-size:calc(24px*var(--z))}
+.pnote{display:grid;gap:2px}
+.pbig{font:800 calc(42px*var(--z))/1.1 var(--ff-ui);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.pbig small{font:600 calc(16px*var(--z)) var(--ff-ui);color:var(--ink-3);letter-spacing:0}
+.pgr{font:800 calc(22px*var(--z)) var(--ff-ui);color:var(--lvX)}
+.psm{color:var(--ink-2);font-size:calc(15px*var(--z))}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
+.pc{display:flex;flex-direction:column;align-items:center;border:1.5px solid var(--line);border-radius:8px;padding:5px 4px;text-decoration:none;color:inherit;font-size:calc(12.5px*var(--z));line-height:1.3;font-variant-numeric:tabular-nums}
+.pc b{font-size:calc(13.5px*var(--z))}
+.pc.full{border-color:var(--rise)}
+.pc.none{border-color:var(--fall)}
+.pc.half{border-color:var(--gold)}
+.pacts{display:flex;flex-wrap:wrap;gap:8px 10px}
+.probe .task,.presult,.pt2 .angabe{scroll-margin-top:76px}
+.probe .mk{border:0;text-decoration:none;background:none}
 </style>
 
 <script>
@@ -1638,9 +1680,10 @@ FMT.mc=function(sp){
       if(sp.pick==="x"&&n<1) return "Mindestens eine Antwort trifft zu.";
       return true; },
     check:function(){
-      done=true; var ok=true;
+      done=true; var ok=true, nr=0, gt=0, bd=0;
       sp.items.forEach(function(it,i){
         var s=!!sel[i], r=!!it.r, b=bs[i];
+        if(r){ nr++; if(s) gt++; } else if(s) bd++;
         if(s!==r) ok=false;
         b.disabled=true;
         var cls = r&&s?"ok":r&&!s?"miss":!r&&s?"no":"";
@@ -1648,7 +1691,7 @@ FMT.mc=function(sp){
         var mk = r&&s?"Trifft zu":r&&!s?"Trifft zu, fehlt bei dir":!r&&s?"Trifft nicht zu":"Trifft nicht zu";
         if(it.w||cls) b.append(h("span",{class:"why",html:"<span class='mk'>"+mk+".</span>"+(it.w||"")}));
       });
-      return {ok:ok, msg: ok?"": (sp.pick===2?"Bei der Matura zählt hier nur die vollständig richtige Auswahl. Lies bei jeder Aussage nach, warum sie stimmt oder nicht."
+      return {ok:ok, frac:nr?Math.max(0,gt-bd)/nr:(ok?1:0), msg: ok?"": (sp.pick===2?"Bei der Matura zählt hier nur die vollständig richtige Auswahl. Lies bei jeder Aussage nach, warum sie stimmt oder nicht."
         :"Unter jeder Antwort steht, warum sie zutrifft oder nicht.")}; },
     solve:function(){ sp.items.forEach(function(it,i){ if(!!it.r!==!!sel[i]) bs[i].click(); }); }
   };
@@ -1684,13 +1727,13 @@ FMT.luecke=function(sp){
   return {el:h("div",{style:"display:grid;gap:14px"},line,cols,whys),
     ready:function(){ return Object.keys(picks).length<sp.gaps.length ? "In jeder Lücke muss genau ein Satzteil angekreuzt sein." : true; },
     check:function(){
-      done=true; render(); var ok=true;
+      done=true; render(); var ok=true, gg=0;
       sp.gaps.forEach(function(g,i){
-        if(picks[i]!==g.r) ok=false;
+        if(picks[i]!==g.r) ok=false; else gg++;
         bsAll[i].forEach(function(b,k){ b.disabled=true; if(k===g.r) b.classList.add(picks[i]===k?"ok":"miss"); else if(picks[i]===k) b.classList.add("no"); });
         whys.append(h("div",{html:"<b>Lücke ("+(i+1)+"):</b> "+g.w}));
       });
-      return {ok:ok,msg:ok?"":"Der Punkt zählt nur, wenn beide Lücken stimmen."}; },
+      return {ok:ok,frac:gg/sp.gaps.length,msg:ok?"":"Der Punkt zählt nur, wenn beide Lücken stimmen."}; },
     solve:function(){ sp.gaps.forEach(function(g,i){ bsAll[i][g.r].click(); }); }
   };
 };
@@ -1716,14 +1759,14 @@ FMT.zuord=function(sp){
   return {el:box,
     ready:function(){ return Object.keys(picks).length<sp.items.length ? "Jede Zeile braucht einen Buchstaben." : true; },
     check:function(){
-      done=true; var ok=true;
+      done=true; var ok=true, gz=0;
       sp.items.forEach(function(it,i){
-        var good=picks[i]===it.r; if(!good) ok=false;
+        var good=picks[i]===it.r; if(!good) ok=false; else gz++;
         rows[i].el.classList.add(good?"ok":"no");
         rows[i].bs.forEach(function(b){ b.disabled=true; });
         rows[i].el.append(h("div",{class:"why",html:(good?"":"<b>Richtig ist "+LET[it.r]+".</b> ")+(it.w||"")}));
       });
-      return {ok:ok,msg:ok?"":"Bei der Matura zählt die Zuordnung nur, wenn alle Zeilen stimmen."}; },
+      return {ok:ok,frac:gz/sp.items.length,msg:ok?"":"Bei der Matura zählt die Zuordnung nur, wenn alle Zeilen stimmen."}; },
     solve:function(){ sp.items.forEach(function(it,i){ rows[i].bs[it.r].click(); }); }
   };
 };
@@ -1749,7 +1792,7 @@ FMT.tf=function(sp){
         rows[i].el.classList.add(good?"ok":"no"); rows[i].by.disabled=rows[i].bn.disabled=true;
         rows[i].el.append(h("div",{class:"why",html:(good?"":"<b>Richtig ist „"+(it.r?Y:N)+"“.</b> ")+(it.w||"")}));
       });
-      return {ok:ok,msg:ok?"":(miss===1?"Eine Zeile stimmt noch nicht.":miss+" Zeilen stimmen noch nicht.")+" Die Begründung steht jeweils darunter."}; },
+      return {ok:ok,frac:(sp.items.length-miss)/sp.items.length,msg:ok?"":(miss===1?"Eine Zeile stimmt noch nicht.":miss+" Zeilen stimmen noch nicht.")+" Die Begründung steht jeweils darunter."}; },
     solve:function(){ sp.items.forEach(function(it,i){ (it.r?rows[i].by:rows[i].bn).click(); }); }
   };
 };
@@ -1863,7 +1906,7 @@ FMT.input=function(sp){
         var right=o.f.show!=null?o.f.show:(o.f.kind==="term"?M(o.f.r):o.f.kind==="menge"?mM(o.f.r):o.f.kind==="iv"?ivM(o.f.r):o.f.kind==="mi"?(o.f.iv?ivM(o.f.iv):mM(o.f.menge)):M(num(o.f.r)));
         o.el.append(h("div",{class:"why",html:(j.ok?"":(j.note||"")+"<b>Richtig:</b> "+right+(o.f.u?" "+o.f.u:"")+". ")+(o.f.w||"")}));
       });
-      return {ok:ok,msg:ok?"":(rows.length>1?(n===1?"Eine Eingabe stimmt noch nicht.":n+" Eingaben stimmen noch nicht."):"")}; },
+      return {ok:ok,frac:(rows.length-n)/rows.length,msg:ok?"":(rows.length>1?(n===1?"Eine Eingabe stimmt noch nicht.":n+" Eingaben stimmen noch nicht."):"")}; },
     solve:function(){ rows.forEach(function(o){ var f=o.f; o.inp.value = f.ex!=null?f.ex:(f.kind==="term"?f.r:f.kind==="menge"?mTxt(f.r):f.kind==="iv"?ivTxt(f.r):f.kind==="mi"?(f.iv?ivTxt(f.iv):mTxt(f.menge)):String(f.r).replace(".",",")); }); }
   };
 };
@@ -1880,10 +1923,11 @@ FMT.offen=function(sp){
   return {el:h("div",{style:"display:grid;gap:12px"},ta,model,intro,chk), twoStep:true,
     ready:function(){ return true; },
     reveal:function(){ model.hidden=false; chk.hidden=false; intro.hidden=false; ta.readOnly=true; },
+    frac:function(){ return cbs.length?cbs.filter(function(c){ return c.checked; }).length/cbs.length:0; },
     check:function(){
       var ok=cbs.every(function(c){ return c.checked; });
       cbs.forEach(function(c){ c.disabled=true; });
-      return {ok:ok,msg:ok?"":"Was noch fehlt, steht in der Musterlösung. Bei der Matura zählen Zahl, Einheit und der Bezug zum Kontext."}; },
+      return {ok:ok,frac:cbs.length?cbs.filter(function(c){ return c.checked; }).length/cbs.length:0,msg:ok?"":"Was noch fehlt, steht in der Musterlösung. Bei der Matura zählen Zahl, Einheit und der Bezug zum Kontext."}; },
     solve:function(){ cbs.forEach(function(c){ c.checked=true; }); }
   };
 };
@@ -2247,7 +2291,7 @@ function taskCard(sp,cx){
   card.append(meta,h("h2",{html:cx.title}),tbody);
   if(sp.fig){ var f=sp.fig(); left.append(f.classList&&f.classList.contains("fig")?f:h("div",{class:"fig"+(sp.figWide?"":" narrow")+((f.svg||f).getAttribute("viewBox")==="0 0 250 210"?" small":"")},f.svg||f)); }
   /* Werkzeug zum Ausprobieren: wird erst gebaut, wenn es jemand öffnet */
-  var hp=helpOf(sp,cx.kind);
+  var hp=cx.exam&&!cx.tools?null:helpOf(sp,cx.kind);
   if(hp){
     var hbody=h("div",{class:"hbody"}), built=false;
     var hbox=h("section",{class:"helpbox",hidden:true,"aria-label":hp.name},
@@ -2270,7 +2314,7 @@ function taskCard(sp,cx){
   if(rule) right.append(h("div",{class:"rule",html:rule}));
   right.append(h("div",{class:"ans"},R.el));
   var hints=h("div",{class:"hints"}), fb=h("div",{class:"fb",hidden:true}), post=h("div",{class:"acts",hidden:true}), solHost=h("div",{});
-  var tips=sp.tips||[];
+  var tips=cx.exam&&!cx.tools?[]:(sp.tips||[]);
   var tipB=btn(IC.tip+"<span>Tipp</span>",function(){
     if(tipN>=tips.length) return;
     hints.append(h("div",{class:"hint",html:"<b>Tipp"+(tips.length>1?" "+(tipN+1):"")+":</b> "+tips[tipN]})); tipN++; tidy(hints);
@@ -2278,20 +2322,23 @@ function taskCard(sp,cx){
   },"tip");
   if(!tips.length) tipB.hidden=true;
   var evB=btn(R.twoStep?"Musterlösung zeigen":"Auswerten",function(){ evaluate(); },"prim");
+  if(cx.exam&&!cx.instant) evB.hidden=true;
   var acts=h("div",{class:"acts"},tipB,h("span",{class:"sp"}),evB);
   right.append(acts,hints,fb);
   card.append(post,solHost);
-  var phase=0;
-  function evaluate(){
-    if(R.twoStep&&phase===0){ R.reveal(); phase=1; evB.textContent="Selbstkontrolle abschließen"; return; }
+  var phase=0, lastRes=null;
+  function evaluate(force){
+    if(R.twoStep&&phase===0&&!force){ R.reveal(); phase=1; evB.textContent="Selbstkontrolle abschließen"; return; }
     var rd=R.ready();
-    if(rd!==true){ fb.hidden=false; fb.className="fb"; fb.innerHTML=rd; return; }
-    var res=R.check(); tries++;
+    if(rd!==true&&!force){ fb.hidden=false; fb.className="fb"; fb.innerHTML=rd; return; }
+    var res; try{ res=R.check(); }catch(err){ if(!force) throw err; res={ok:false,frac:0,blank:true,msg:""}; }
+    tries++; lastRes=res;
     evB.disabled=true; tipB.disabled=true;
     solved=res.ok;
     var gain=cx.onDone?cx.onDone(res.ok,{tips:tipN}):0;
     fb.hidden=false; fb.className="fb "+(res.ok?"ok":"no");
-    fb.innerHTML=(res.ok&&gain?"<span class='gain'>+"+gain+" hm</span>":"")+"<b class='v'>"+(res.ok?pick(PRAISE):"Noch nicht.")+"</b> "+(res.msg||"")+
+    if(cx.exam) fb.innerHTML=(cx.score?cx.score(res):"")+"<b class='v'>"+(res.ok?"Richtig.":res.blank?"Nicht bearbeitet.":(res.frac>=.5?"Teilweise richtig.":"Nicht richtig."))+"</b> "+(res.msg||"");
+    else fb.innerHTML=(res.ok&&gain?"<span class='gain'>+"+gain+" hm</span>":"")+"<b class='v'>"+(res.ok?pick(PRAISE):"Noch nicht.")+"</b> "+(res.msg||"")+
       (res.ok&&sp.after?" "+sp.after:"");
     clr(post); post.hidden=false;
     if(sp.sol){
@@ -2311,7 +2358,12 @@ function taskCard(sp,cx){
   }
   card.addEventListener("keydown",function(e){ if(e.key==="Enter"&&e.target.tagName==="INPUT"&&e.target.type==="text"&&!evB.disabled){ e.preventDefault(); evaluate(); } });
   tidy(card);
-  card.api={R:R,evaluate:evaluate,isSolved:function(){ return solved; },post:post};
+  card.api={R:R,evaluate:evaluate,isSolved:function(){ return solved; },post:post,res:function(){ return lastRes; },
+    finish:function(){
+      if(R.twoStep){ if(phase===0){ R.reveal(); phase=1; } evB.hidden=true; tipB.disabled=true;
+        if(!card.querySelector(".fin")) fb.before(h("div",{class:"fb fin"},"Vergleiche mit der Musterlösung und hake an, was in deiner Antwort steht.")); tidy(card); return; }
+      if(!tries) evaluate(true);
+    }};
   return card;
 }
 
@@ -7507,7 +7559,7 @@ FMT.parab=function(sp){
       }
       return {ok:ok,msg:msg}; },
     solve:function(){
-      var S0={x:U,y:sp.v}, cand=[1,-1,2,-2,3,-3,4,-4];
+      var S0={x:U,y:sp.v}, cand=[1,-1,2,-2,3,-3,4,-4,.5,-.5,1.5,-1.5,2.5,-2.5,3.5,-3.5,5,-5];
       for(var i=0;i<cand.length;i++){ var x=U+cand[i], y=sp.v+sp.a*cand[i]*cand[i];
         if(x>=sp.xr[0]-1e-9&&x<=sp.xr[1]+1e-9&&y>=sp.yr[0]-1e-9&&y<=sp.yr[1]+1e-9&&Math.abs(x/snX-Math.round(x/snX))<1e-6&&Math.abs(y/snY-Math.round(y/snY))<1e-6){ pts=[S0,{x:x,y:y}]; draw(); return; } }
     }
@@ -8511,146 +8563,196 @@ function amk(k,t){ return "<mark class='mk' data-k='"+k+"'>"+t+"</mark>"; }
 var TOURS=[];
 
 /* ---------- Tour 1 · Skikurs ---------- */
-TOURS.push({id:"g1",title:"Skikurs der 5A",sub:"Kosten, Rabatt und eine Gondelfahrt",
-  angabe:"<p>Die 5A fährt im Jänner fünf Tage auf Skikurs. Mit dabei sind "+amk("n","24 Schülerinnen und Schüler")+". Der "+amk("bus","Bus kostet pauschal 540 €")+", gleichgültig, wie viele mitfahren. Das "+amk("q","Quartier verrechnet 46 € pro Person und Nacht")+", gebucht sind "+amk("q","vier Nächte")+".</p>"+
-    "<p>Der "+amk("lift","Liftpass für fünf Tage kostet 168 € pro Person")+". "+amk("rab","Ab 20 Personen gewährt die Liftgesellschaft 15 % Gruppenrabatt auf den Liftpass")+". Lehrpersonen fahren gratis und werden in dieser Aufgabe nicht mitgerechnet.</p>",
+/* P = {n,bus,nn,pq,pl,r,a,s0,v,T,m}: Mitfahrende, Bus pauschal, Nächte, Quartier je Nacht, Liftpass, Gruppenrabatt in %, Listenpreis-Aufschlag in %,
+   Talstation (m), Steigung (m/min), Fahrtdauer (min), Zeit der Mittelstation (min). Die Voreinstellungen haben glatte Werte; 540/24 und Co. brechen ab. */
+var SKI_PRE=[
+  {n:24,bus:540,nn:4,pq:46,pl:168,r:15,a:5,s0:1000,v:100,T:8,m:4.5,sY:200},
+  {n:25,bus:480,nn:3,pq:42,pl:160,r:15,a:5,s0:900,v:100,T:6,m:2.5,sY:100},
+  {n:24,bus:600,nn:5,pq:40,pl:200,r:20,a:10,s0:1200,v:120,T:10,m:5.5,sY:100},
+  {n:22,bus:660,nn:4,pq:44,pl:180,r:10,a:5,s0:1100,v:80,T:10,m:3.5,sY:100}];
+/* Dezimaldarstellung von p/q: Ziffern bis zur Periode, die Periode und 12 Stellen als Text */
+function decPer(p,q){
+  var ip=Math.floor(p/q), r=p%q, seen={}, dg=[], pos=0;
+  while(r!==0&&seen[r]===undefined&&dg.length<80){ seen[r]=pos; r*=10; dg.push(Math.floor(r/q)); r%=q; pos++; }
+  var out={ip:ip,per:"",pre:"",term:r===0};
+  if(r===0){ out.pre=dg.join(""); } else { out.pre=dg.slice(0,seen[r]).join(""); out.per=dg.slice(seen[r]).join(""); }
+  var d12=dg.slice(); while(d12.length<12&&!out.term) d12=d12.concat(dg.slice(seen[r]));
+  out.long=num(ip)+","+d12.slice(0,12).join("")+"…";
+  out.str=num(ip)+(out.pre||out.per?",":"")+out.pre+(out.per?per(out.per):"");
+  return out;
+}
+function tour1(P){
+  var N=num, rd=function(v){ return Math.round(v*1e6)/1e6; }, E=function(v){ return eu(v); };
+  var n=P.n, bus=P.bus, nn=P.nn, pq=P.pq, pl=P.pl, r=P.r, a=P.a, s0=P.s0, v=P.v, T=P.T, m=P.m;
+  var fq=rd(1-r/100), plR=rd(pl*fq), q4=nn*pq, k0=pl+q4, kR=rd(plR+q4), GR=rd(bus+n*kR), rg=function(x){ return rd(bus+kR*x); };
+  var nw={3:"drei",4:"vier",5:"fünf"}[nn], per0=rd(r), R20=rg(20), R40=rg(40), R25=rg(25), R24=rg(24);
+  var ymaxR=Math.ceil(rg(30)/2000)*2000, bmax=Math.ceil(k0*1.2/10)*10, lmax=Math.ceil(pl*1.13/10)*10;
+  var Kn=rd(GR/n), K20=rd(R20/20), dK=rd(K20-Kn), kmin=Math.floor((kR+bus/30)/2)*2-4, kmax=Math.ceil(K20/2)*2+4;
+  var P21=decPer(bus,21), fr=bus/21, g=function(x,y){ while(y){ var t=x%y; x=y; y=t; } return x; }, gg=g(bus,21), fn=bus/gg, fd=21/gg;
+  var hB=s0+v*T, hM=s0+v*m, ymaxG=Math.ceil((hB+100)/200)*200, xmaxG=T+2;
+  var fa=rd((1+a/100)*(1-r/100)), les=rd((1-fa)*100), claim=r-a, rab2=rd(r*(1+a/100)), hmin=Math.round(m*10)/10;
+  var T1={
+  angabe:"<p>Die 5A fährt im Jänner fünf Tage auf Skikurs. Mit dabei sind "+amk("n",N(n)+" Schülerinnen und Schüler")+". Der "+amk("bus","Bus kostet pauschal "+N(bus)+" €")+", gleichgültig, wie viele mitfahren. Das "+amk("q","Quartier verrechnet "+N(pq)+" € pro Person und Nacht")+", gebucht sind "+amk("q",nw+" Nächte")+".</p>"+
+    "<p>Der "+amk("lift","Liftpass für fünf Tage kostet "+N(pl)+" € pro Person")+". "+amk("rab","Ab 20 Personen gewährt die Liftgesellschaft "+N(r)+" % Gruppenrabatt auf den Liftpass")+". Lehrpersonen fahren gratis und werden in dieser Aufgabe nicht mitgerechnet.</p>",
   parts:[
-  {title:"Gesamtkosten ohne Rabatt",marks:["bus","q","lift"],note:"Ohne Rabatt: "+M("G(n) = 540 + 352 * n"),mk:function(){ return {
+  {title:"Gesamtkosten ohne Rabatt",marks:["bus","q","lift"],note:"Ohne Rabatt: "+M("G(n) = "+N(bus)+" + "+N(k0)+" * n"),mk:function(){ return {
     fmt:"input",q:"Zuerst wird ohne Gruppenrabatt gerechnet. Gib einen Term für die Gesamtkosten "+M("G")+" (in Euro) an, wenn "+M("n")+" Schülerinnen und Schüler mitfahren. Fass so weit wie möglich zusammen.",
-    fields:[{l:M("G(n) ="),kind:"term",r:"540 + 352n",vars:["n"],w:"Pro Person 168 € für den Lift und 4 · 46 € = 184 € für das Quartier, dazu einmal der Bus."}],
-    tips:["Welche Kosten fallen pro Person an, welche nur einmal?","Vier Nächte zu je 46 € sind 184 €. Dazu kommt der Liftpass."],
-    sol:{viz:vBars(420,3),merk:"Fixkosten stehen allein, Kosten pro Person werden mit der Anzahl multipliziert.",steps:[
-      {t:"Das Quartier kostet pro Person vier Nächte lang 46 €.",m:M("4 * 46 = 184"),a:function(V){ V.bar(0,"Quartier",184,"184 €","--right"); }},
-      {t:"Dazu der Liftpass. Zusammen sind das die Kosten pro Person.",m:M("168 + 184 = 352"),a:function(V){ V.bar(1,"Liftpass",168,"168 €","--dx"); V.bar(2,"pro Person",352,"352 €","--ink-3",.5); }},
-      {t:"Der Bus kostet 540 €, egal wie viele mitfahren. Er wird nicht mit "+M("n")+" multipliziert.",m:M("G(n) = 540 + 352 * n")}]} }; }},
-  {title:"Mit Gruppenrabatt",marks:["rab","n","lift"],note:"Mit Rabatt: Liftpass 142,80 €, pro Person 326,80 €, für 24 Personen 8 383,20 €",mk:function(){ return {
+    fields:[{l:M("G(n) ="),kind:"term",r:N(bus)+" + "+N(k0)+"n",vars:["n"],w:"Pro Person "+N(pl)+" € für den Lift und "+nn+" · "+N(pq)+" € = "+N(q4)+" € für das Quartier, dazu einmal der Bus."}],
+    tips:["Welche Kosten fallen pro Person an, welche nur einmal?",nw.charAt(0).toUpperCase()+nw.slice(1)+" Nächte zu je "+N(pq)+" € sind "+N(q4)+" €. Dazu kommt der Liftpass."],
+    sol:{viz:vBars(bmax,3),merk:"Fixkosten stehen allein, Kosten pro Person werden mit der Anzahl multipliziert.",steps:[
+      {t:"Das Quartier kostet pro Person "+nw+" Nächte lang "+N(pq)+" €.",m:M(nn+" * "+N(pq)+" = "+N(q4)),a:function(V){ V.bar(0,"Quartier",q4,N(q4)+" €","--right"); }},
+      {t:"Dazu der Liftpass. Zusammen sind das die Kosten pro Person.",m:M(N(pl)+" + "+N(q4)+" = "+N(k0)),a:function(V){ V.bar(1,"Liftpass",pl,N(pl)+" €","--dx"); V.bar(2,"pro Person",k0,N(k0)+" €","--ink-3",.5); }},
+      {t:"Der Bus kostet "+N(bus)+" €, egal wie viele mitfahren. Er wird nicht mit "+M("n")+" multipliziert.",m:M("G(n) = "+N(bus)+" + "+N(k0)+" * n")}]} }; }},
+  {title:"Mit Gruppenrabatt",marks:["rab","n","lift"],note:"Mit Rabatt: Liftpass "+E(plR)+" €, pro Person "+E(kR)+" €, für "+N(n)+" Personen "+E(GR)+" €",mk:function(){ return {
     fmt:"input",help:helpStreifen("eins"),q:"Die Klasse ist groß genug für den Gruppenrabatt. Berechne.",
-    fields:[{l:"Preis des Liftpasses pro Person mit Rabatt:",r:142.8,u:"€",w:"168 · 0,85."},{l:"Gesamtkosten für die 24 Schülerinnen und Schüler mit Rabatt:",r:8383.2,tol:.011,u:"€",w:"540 + 24 · (142,80 + 184)."}],
-    tips:["15 % Rabatt heißt: 85 % bleiben.","Der Rabatt gilt nur für den Liftpass. Bus und Quartier bleiben, wie sie sind."],
-    sol:{viz:vBars(190,2),merk:"Ein Rabatt wirkt nur auf den Posten, für den er gewährt wird.",steps:[
-      {t:"15 % Rabatt: Es bleiben 85 % des Liftpreises.",m:M("168 * 0,85 = 142,80"),a:function(V){ V.bar(0,"Liftpass",168,"168 € = 100 %","--ink-3"); V.bar(1,"mit Rabatt",142.8,"142,80 € = 85 %","--dx",.5); }},
-      {t:"Pro Person kommt das Quartier dazu.",m:M("142,80 + 184 = 326,80")},
-      {t:"Für 24 Personen, samt Bus.",m:M("540 + 24 * 326,80 = 540 + 7843,20 = 8383,20")}]} }; }},
+    fields:[{l:"Preis des Liftpasses pro Person mit Rabatt:",r:plR,u:"€",w:N(pl)+" · "+N(fq)+"."},{l:"Gesamtkosten für die "+N(n)+" Schülerinnen und Schüler mit Rabatt:",r:GR,tol:.011,u:"€",w:N(bus)+" + "+N(n)+" · ("+E(plR)+" + "+N(q4)+")."}],
+    tips:[N(r)+" % Rabatt heißt: "+N(100-r)+" % bleiben.","Der Rabatt gilt nur für den Liftpass. Bus und Quartier bleiben, wie sie sind."],
+    sol:{viz:vBars(lmax,2),merk:"Ein Rabatt wirkt nur auf den Posten, für den er gewährt wird.",steps:[
+      {t:N(r)+" % Rabatt: Es bleiben "+N(100-r)+" % des Liftpreises.",m:M(N(pl)+" * "+N(fq)+" = "+E(plR)),a:function(V){ V.bar(0,"Liftpass",pl,N(pl)+" € = 100 %","--ink-3"); V.bar(1,"mit Rabatt",plR,E(plR)+" € = "+N(100-r)+" %","--dx",.5); }},
+      {t:"Pro Person kommt das Quartier dazu.",m:M(E(plR)+" + "+N(q4)+" = "+E(kR))},
+      {t:"Für "+N(n)+" Personen, samt Bus.",m:M(N(bus)+" + "+N(n)+" * "+E(kR)+" = "+N(bus)+" + "+E(rd(n*kR))+" = "+E(GR))}]} }; }},
   {title:"Was die Zahlen bedeuten",marks:["bus","rab"],mk:function(){ return {
-    fmt:"mc",pick:2,help:helpKD({treppe:1,k:1.5,d:1}),q:"Mit Rabatt gilt für "+M("n >= 20")+" die Funktion "+M("R")+" mit "+M("R(n) = 540 + 326,8 * n")+" (Gesamtkosten in Euro). Kreuze die beiden zutreffenden Aussagen an.",
-    items:[{s:"Jede weitere Person erhöht die Gesamtkosten um 326,80 €.",r:1,w:"326,8 ist die Steigung, also die Änderung pro Person."},
-      {s:M("R(0) = 540")+" bedeutet: Ohne Rabatt kostet der Skikurs 540 €.",r:0,w:"540 € ist der Preis für den Bus. Mit dem Rabatt hat diese Zahl nichts zu tun, und "+M("R")+" gilt erst ab 20 Personen."},
-      {s:"Fahren doppelt so viele Personen mit, verdoppeln sich die Gesamtkosten.",r:0,w:"Der Bus kostet immer 540 €. "+M("R(20) = 7076")+", aber "+M("R(40) = 13612")+" und nicht 14 152."},
-      {s:M("R(25) - R(24) = 326,8"),r:1,w:"Eine Person mehr, also einmal die Steigung."},
+    fmt:"mc",pick:2,help:helpKD({treppe:1,k:1.5,d:1}),q:"Mit Rabatt gilt für "+M("n >= 20")+" die Funktion "+M("R")+" mit "+M("R(n) = "+N(bus)+" + "+N(kR)+" * n")+" (Gesamtkosten in Euro). Kreuze die beiden zutreffenden Aussagen an.",
+    items:[{s:"Jede weitere Person erhöht die Gesamtkosten um "+E(kR)+" €.",r:1,w:N(kR)+" ist die Steigung, also die Änderung pro Person."},
+      {s:M("R(0) = "+N(bus))+" bedeutet: Ohne Rabatt kostet der Skikurs "+N(bus)+" €.",r:0,w:N(bus)+" € ist der Preis für den Bus. Mit dem Rabatt hat diese Zahl nichts zu tun, und "+M("R")+" gilt erst ab 20 Personen."},
+      {s:"Fahren doppelt so viele Personen mit, verdoppeln sich die Gesamtkosten.",r:0,w:"Der Bus kostet immer "+N(bus)+" €. "+M("R(20) = "+N(R20))+", aber "+M("R(40) = "+N(R40))+" und nicht "+N(2*R20)+"."},
+      {s:M("R(25) - R(24) = "+N(kR)),r:1,w:"Eine Person mehr, also einmal die Steigung."},
       {s:"Die Kosten pro Person sind für jede Gruppengröße gleich.",r:0,w:"Der Bus wird auf mehr Köpfe verteilt, wenn mehr mitfahren. Pro Person wird es billiger."}],
     tips:["Vergleiche mit "+M("f(x) = k * x + d")+": Welche Zahl ist "+M("k")+", welche "+M("d")+"?",M("k")+" ist die Änderung, wenn "+M("n")+" um 1 wächst. "+M("d")+" fällt unabhängig von "+M("n")+" an."],
-    sol:{viz:vPlane([0,30],[0,12000],{W:600,H:400,xl:"n",yl:"€",sx:5,sy:2000}),merk:"In "+M("k * x + d")+" ist "+M("k")+" die Änderung pro Einheit und "+M("d")+" der feste Anteil. Verdoppeln gilt nur bei "+M("d = 0")+".",steps:[
-      {t:"Der Graph ist eine Gerade. Sie beginnt nicht im Ursprung, sondern bei den 540 € für den Bus.",a:function(V){ V.L(326.8,540,"--dx"); V.Pt(0,540,"540","--right",.7,{dx:10,dy:-10}); }},
-      {t:"Von 20 auf 25 Personen steigen die Kosten um 5 · 326,80 €. Pro Person sind es 326,80 €.",m:M("R(25) - R(24) = 326,8"),a:function(V){ V.T(20,7076,5,1634,0,{nolab:1}); V.Pt(20,7076,"R(20) = 7 076","--dy",.6,{dx:-10,anchor:"end"}); }},
-      {t:"Verdoppeln sich die Personen, verdoppelt sich nur der Anteil mit "+M("n")+". Der Bus bleibt.",m:M("2 * R(20) = 14152")+" &nbsp; aber &nbsp; "+M("R(40) = 13612")}]} }; }},
-  {title:"Kosten pro Person",marks:["bus","n"],note:M("K(24) = 349,30")+" € und "+M("K(20) = 353,80")+" € pro Person",mk:function(){ return {
+    sol:{viz:vPlane([0,30],[0,ymaxR],{W:600,H:400,xl:"n",yl:"€",sx:5,sy:2000}),merk:"In "+M("k * x + d")+" ist "+M("k")+" die Änderung pro Einheit und "+M("d")+" der feste Anteil. Verdoppeln gilt nur bei "+M("d = 0")+".",steps:[
+      {t:"Der Graph ist eine Gerade. Sie beginnt nicht im Ursprung, sondern bei den "+N(bus)+" € für den Bus.",a:function(V){ V.L(kR,bus,"--dx"); V.Pt(0,bus,N(bus),"--right",.7,{dx:10,dy:-10}); }},
+      {t:"Von 20 auf 25 Personen steigen die Kosten um 5 · "+E(kR)+" €. Pro Person sind es "+E(kR)+" €.",m:M("R(25) - R(24) = "+N(kR)),a:function(V){ V.T(20,R20,5,rd(5*kR),0,{nolab:1}); V.Pt(20,R20,"R(20) = "+N(R20),"--dy",.6,{dx:-10,anchor:"end"}); }},
+      {t:"Verdoppeln sich die Personen, verdoppelt sich nur der Anteil mit "+M("n")+". Der Bus bleibt.",m:M("2 * R(20) = "+N(2*R20))+" &nbsp; aber &nbsp; "+M("R(40) = "+N(R40))}]} }; }},
+  {title:"Kosten pro Person",marks:["bus","n"],note:M("K("+N(n)+") = "+N(Kn))+" € und "+M("K(20) = "+N(K20))+" € pro Person",mk:function(){ return {
     fmt:"input",help:false,q:"Die Kosten pro Person hängen davon ab, wie viele mitfahren. "+M("K(n)")+" gibt die Kosten pro Person (in Euro) bei "+M("n")+" Mitfahrenden an, mit Rabatt und für "+M("n >= 20")+". Berechne.",
-    fields:[{l:M("K(24) ="),r:349.3,u:"€",w:"8 383,20 : 24."},{l:M("K(20) ="),r:353.8,u:"€",w:"(540 + 20 · 326,80) : 20."},{l:"Um wie viel Euro zahlt jede Person weniger, wenn 24 statt 20 mitfahren?",r:4.5,u:"€",w:"353,80 − 349,30."}],
-    tips:[M("K(n)")+" ist Gesamtkosten durch Anzahl.","Der Bus wird auf alle aufgeteilt: 540 : "+M("n")+". Die 326,80 € zahlt ohnehin jede Person."],
-    sol:{viz:vPlane([18,30],[340,358],{W:600,H:380,xl:"n",yl:"€ pro Person",sx:2,sy:2}),merk:"Gesamtkosten sind hier linear, die Kosten pro Person nicht: Der feste Anteil wird auf immer mehr Köpfe verteilt.",steps:[
-      {t:"Gesamtkosten durch Anzahl.",m:M("K(24) = {8383,20/24} = 349,30"),a:function(V){ V.Pt(24,349.3,"K(24)","--dy"); }},
-      {t:"Für 20 Personen ebenso.",m:M("K(20) = {540 + 20 * 326,80/20} = {7076/20} = 353,80"),a:function(V){ V.Pt(20,353.8,"K(20)","--dy"); }},
-      {t:"Der Unterschied kommt nur vom Bus: 540 : 20 = 27 €, aber 540 : 24 = 22,50 €.",m:M("27 - 22,50 = 4,50")},
+    fields:[{l:M("K("+N(n)+") ="),r:Kn,tol:.011,u:"€",w:E(GR)+" : "+N(n)+"."},{l:M("K(20) ="),r:K20,tol:.011,u:"€",w:"("+N(bus)+" + 20 · "+N(kR)+") : 20."},{l:"Um wie viel Euro zahlt jede Person weniger, wenn "+N(n)+" statt 20 mitfahren?",r:dK,tol:.011,u:"€",w:N(K20)+" − "+N(Kn)+"."}],
+    tips:[M("K(n)")+" ist Gesamtkosten durch Anzahl.","Der Bus wird auf alle aufgeteilt: "+N(bus)+" : "+M("n")+". Die "+E(kR)+" € zahlt ohnehin jede Person."],
+    sol:{viz:vPlane([18,30],[kmin,kmax],{W:600,H:380,xl:"n",yl:"€ pro Person",sx:2,sy:2}),merk:"Gesamtkosten sind hier linear, die Kosten pro Person nicht: Der feste Anteil wird auf immer mehr Köpfe verteilt.",steps:[
+      {t:"Gesamtkosten durch Anzahl.",m:M("K("+N(n)+") = {"+E(GR)+"/"+N(n)+"} = "+N(Kn)),a:function(V){ V.Pt(n,Kn,"K("+N(n)+")","--dy"); }},
+      {t:"Für 20 Personen ebenso.",m:M("K(20) = {"+N(bus)+" + 20 * "+N(kR)+"/20} = {"+N(R20)+"/20} = "+N(K20)),a:function(V){ V.Pt(20,K20,"K(20)","--dy"); }},
+      {t:"Der Unterschied kommt nur vom Bus: "+N(bus)+" : 20 = "+N(rd(bus/20))+" €, aber "+N(bus)+" : "+N(n)+" = "+N(rd(bus/n))+" €.",m:M(N(rd(bus/20))+" - "+N(rd(bus/n))+" = "+N(dK))},
       {t:"Mit dem Regler siehst du, wie die Kosten pro Person mit jeder weiteren Person sinken, aber immer langsamer.",
-       ctl:{label:"Mitfahrende "+M("n"),min:20,max:30,step:1,val:28,on:function(V,n){ for(var i=20;i<=n;i++) V.Pt(i,540/i+326.8,"",i===n?"--rise":"--ink-3",0,{r:i===n?7:4}); V.Tx(24.5,356.6,"K("+n+") = "+num(540/n+326.8,2)+" €","--ink",0); }}}]} }; }},
+       ctl:{label:"Mitfahrende "+M("n"),min:20,max:30,step:1,val:28,on:function(V,x){ for(var i=20;i<=x;i++) V.Pt(i,bus/i+kR,"",i===x?"--rise":"--ink-3",0,{r:i===x?7:4}); V.Tx(24.5,kmax-1.4,"K("+x+") = "+num(bus/x+kR,2)+" €","--ink",0); }}}]} }; }},
   {title:"Eine Zahl ohne Ende",marks:["bus"],mk:function(){ return {
-    fmt:"mc",pick:2,help:helpTeilen(),q:"In der Parallelklasse fahren 21 Personen mit. Der Anteil am Bus beträgt dann 540 : 21 = 25,714285714285… Euro pro Person. Kreuze die beiden zutreffenden Aussagen über diese Zahl an.",
-    items:[{s:"Sie ist rational, weil sie der Quotient zweier ganzer Zahlen ist.",r:1,w:"540 : 21 ist der Bruch "+M("{540/21} = {180/7}")+"."},
+    fmt:"mc",pick:2,help:helpTeilen(),q:"In der Parallelklasse fahren 21 Personen mit. Der Anteil am Bus beträgt dann "+N(bus)+" : 21 = "+P21.long+" Euro pro Person. Kreuze die beiden zutreffenden Aussagen über diese Zahl an.",
+    items:[{s:"Sie ist rational, weil sie der Quotient zweier ganzer Zahlen ist.",r:1,w:N(bus)+" : 21 ist der Bruch "+M("{"+N(bus)+"/21} = {"+N(fn)+"/"+N(fd)+"}")+"."},
       {s:"Sie ist irrational, weil sie unendlich viele Nachkommastellen hat.",r:0,w:"Unendlich viele Stellen allein sagen nichts. Entscheidend ist, ob sich die Ziffern periodisch wiederholen."},
-      {s:"Ihre Dezimaldarstellung ist periodisch.",r:1,w:"Der Ziffernblock 714285 wiederholt sich unverändert."},
-      {s:"Sie ist eine natürliche Zahl, weil 540 und 21 natürliche Zahlen sind.",r:0,w:"Der Quotient natürlicher Zahlen muss keine natürliche Zahl sein."},
+      {s:"Ihre Dezimaldarstellung ist periodisch.",r:1,w:"Der Ziffernblock "+P21.per+" wiederholt sich unverändert."},
+      {s:"Sie ist eine natürliche Zahl, weil "+N(bus)+" und 21 natürliche Zahlen sind.",r:0,w:"Der Quotient natürlicher Zahlen muss keine natürliche Zahl sein."},
       {s:"Sie lässt sich nicht als Bruch schreiben, weil die Division nicht aufgeht.",r:0,w:"Sie ist ja gerade als Bruch entstanden."}],
-    tips:["540 : 21 lässt sich kürzen: 180 : 7.","Beim Dividieren durch 7 gibt es nur die Reste 1 bis 6. Irgendwann wiederholt sich einer."],
-    sol:{viz:vSets(),merk:"Jeder Bruch ganzer Zahlen ergibt eine abbrechende oder periodische Dezimalzahl. Für den Kontext wird gerundet: 25,71 €.",steps:[
-      {t:"Die Zahl ist als Bruch entstanden.",m:M("540 : 21 = {540/21} = {180/7}"),a:function(V){ V.drop("180/7","Q"); }},
-      {t:"Beim schriftlichen Dividieren durch 7 können nur sechs verschiedene Reste auftreten. Spätestens nach sechs Schritten wiederholt sich einer, und mit ihm die Ziffern.",m:M("25,"+per("714285"))},
+    tips:[N(bus)+" : 21 lässt sich kürzen: "+N(fn)+" : "+N(fd)+".","Beim Dividieren durch "+N(fd)+" gibt es nur die Reste 1 bis "+N(fd-1)+". Irgendwann wiederholt sich einer."],
+    sol:{viz:vSets(),merk:"Jeder Bruch ganzer Zahlen ergibt eine abbrechende oder periodische Dezimalzahl. Für den Kontext wird gerundet: "+N(Math.round(fr*100)/100)+" €.",steps:[
+      {t:"Die Zahl ist als Bruch entstanden.",m:M(N(bus)+" : 21 = {"+N(bus)+"/21} = {"+N(fn)+"/"+N(fd)+"}"),a:function(V){ V.drop(N(fn)+"/"+N(fd),"Q"); }},
+      {t:"Beim schriftlichen Dividieren durch "+N(fd)+" können nur "+N(fd-1)+" verschiedene Reste auftreten. Spätestens nach "+N(fd-1)+" Schritten wiederholt sich einer, und mit ihm die Ziffern.",m:M(P21.str)},
       "Irrational wäre die Zahl nur, wenn ihre Ziffernfolge nie abbricht und nie periodisch wird."]} }; }},
   {title:"Die Gondel",marks:[],mk:function(){ return {
-    fmt:"konstr",q:"<p>Am dritten Tag fährt die Gruppe mit der Gondel. Die Talstation liegt auf 1 000 m Seehöhe, die Bergstation auf 1 800 m. Die Fahrt dauert 8 Minuten, die Gondel steigt gleichmäßig.</p><p>Die Funktion "+M("h")+" gibt die Seehöhe der Gondel (in Metern) "+M("t")+" Minuten nach der Abfahrt an. Zeichne den Graphen von "+M("h")+".</p>",
-    W:560,H:440,xr:[0,10],yr:[0,2000],xl:"t in min",yl:"h in m",sx:1,sy:200,snapX:1,snapY:200,k:100,d:1000,
-    tips:["Zwei Punkte genügen: die Abfahrt und die Ankunft.","Bei "+M("t = 0")+" ist die Gondel auf 1 000 m, bei "+M("t = 8")+" auf 1 800 m."],
-    sol:{viz:vPlane([0,10],[0,2000],{W:560,H:440,xl:"t in min",yl:"h in m",sx:1,sy:200}),merk:"Startwert und ein zweiter Punkt legen die Gerade fest.",steps:[
-      {t:"Bei der Abfahrt ist die Gondel auf 1 000 m.",a:function(V){ V.Pt(0,1000,"Talstation","--right"); }},
-      {t:"Nach 8 Minuten ist sie auf 1 800 m.",a:function(V){ V.Pt(8,1800,"Bergstation","--dy",0,{dx:-10,anchor:"end"}); }},
-      {t:"Gleichmäßig steigen heißt: Der Graph ist eine Gerade durch diese beiden Punkte. In 8 Minuten sind es 800 m, in jeder Minute 100 m.",a:function(V){ V.L(100,1000,"--dx"); V.T(2,1200,2,200,.8); }}]} }; }},
-  {title:"Gleichung der Gondelfahrt",marks:[],note:"Gondel: "+M("h(t) = 1000 + 100 * t"),mk:function(){ return {
-    fmt:"input",help:helpModell("Kerze"),q:"Gib eine Funktionsgleichung von "+M("h")+" an ("+M("h(t)")+" in Metern, "+M("t")+" in Minuten). Berechne dann, nach wie vielen Minuten die Gondel die Mittelstation auf 1 450 m Seehöhe passiert.",
-    fields:[{l:M("h(t) ="),kind:"term",r:"100t + 1000",vars:["t"],w:"Startwert 1 000, pro Minute 100 m dazu."},{l:"Die Gondel ist auf 1 450 m bei "+M("t ="),r:4.5,u:"min",w:"450 m Höhenunterschied, 100 m pro Minute."}],
-    tips:[M("d")+" ist die Höhe bei "+M("t = 0")+". "+M("k")+" ist der Höhengewinn pro Minute.","Für die Mittelstation: "+M("1000 + 100 * t = 1450")+" lösen."],
-    sol:{viz:vPlane([0,10],[0,2000],{W:560,H:400,xl:"t in min",yl:"h in m",sx:1,sy:200}),merk:M("d")+" ist der Startwert, "+M("k")+" die Änderung pro Einheit. Eine gesuchte Stelle findet man, indem man den Funktionsterm gleich dem Wert setzt.",steps:[
-      {t:"Startwert und Änderung pro Minute.",m:M("d = 1000")+" &nbsp; und &nbsp; "+M("k = {1800 - 1000/8} = 100"),a:function(V){ V.L(100,1000,"--dx"); }},
-      {t:"Die Funktionsgleichung.",m:M("h(t) = 100 * t + 1000")},
-      {t:"Gesucht ist die Stelle mit dem Funktionswert 1 450.",m:M("100 * t + 1000 = 1450")+" &nbsp; also &nbsp; "+M("t = 4,5"),a:function(V){ V.Sg(0,1450,4.5,1450,"--ink-3",0,{dash:"5 5",w:2}); V.Sg(4.5,0,4.5,1450,"--ink-3",.2,{dash:"5 5",w:2}); V.Pt(4.5,1450,"(4,5 | 1 450)","--rise",.5); }}]} }; }},
+    fmt:"konstr",q:"<p>Am dritten Tag fährt die Gruppe mit der Gondel. Die Talstation liegt auf "+N(s0)+" m Seehöhe, die Bergstation auf "+N(hB)+" m. Die Fahrt dauert "+N(T)+" Minuten, die Gondel steigt gleichmäßig.</p><p>Die Funktion "+M("h")+" gibt die Seehöhe der Gondel (in Metern) "+M("t")+" Minuten nach der Abfahrt an. Zeichne den Graphen von "+M("h")+".</p>",
+    W:560,H:440,xr:[0,xmaxG],yr:[0,ymaxG],xl:"t in min",yl:"h in m",sx:1,sy:200,snapX:1,snapY:P.sY,k:v,d:s0,
+    tips:["Zwei Punkte genügen: die Abfahrt und die Ankunft.","Bei "+M("t = 0")+" ist die Gondel auf "+N(s0)+" m, bei "+M("t = "+N(T))+" auf "+N(hB)+" m."],
+    sol:{viz:vPlane([0,xmaxG],[0,ymaxG],{W:560,H:440,xl:"t in min",yl:"h in m",sx:1,sy:200}),merk:"Startwert und ein zweiter Punkt legen die Gerade fest.",steps:[
+      {t:"Bei der Abfahrt ist die Gondel auf "+N(s0)+" m.",a:function(V){ V.Pt(0,s0,"Talstation","--right"); }},
+      {t:"Nach "+N(T)+" Minuten ist sie auf "+N(hB)+" m.",a:function(V){ V.Pt(T,hB,"Bergstation","--dy",0,{dx:-10,anchor:"end"}); }},
+      {t:"Gleichmäßig steigen heißt: Der Graph ist eine Gerade durch diese beiden Punkte. In "+N(T)+" Minuten sind es "+N(v*T)+" m, in jeder Minute "+N(v)+" m.",a:function(V){ V.L(v,s0,"--dx"); V.T(2,s0+2*v,2,2*v,.8); }}]} }; }},
+  {title:"Gleichung der Gondelfahrt",marks:[],note:"Gondel: "+M("h(t) = "+N(s0)+" + "+N(v)+" * t"),mk:function(){ return {
+    fmt:"input",help:helpModell("Kerze"),q:"Gib eine Funktionsgleichung von "+M("h")+" an ("+M("h(t)")+" in Metern, "+M("t")+" in Minuten). Berechne dann, nach wie vielen Minuten die Gondel die Mittelstation auf "+N(hM)+" m Seehöhe passiert.",
+    fields:[{l:M("h(t) ="),kind:"term",r:N(v)+"t + "+N(s0),vars:["t"],w:"Startwert "+N(s0)+", pro Minute "+N(v)+" m dazu."},{l:"Die Gondel ist auf "+N(hM)+" m bei "+M("t ="),r:m,u:"min",w:N(hM-s0)+" m Höhenunterschied, "+N(v)+" m pro Minute."}],
+    tips:[M("d")+" ist die Höhe bei "+M("t = 0")+". "+M("k")+" ist der Höhengewinn pro Minute.","Für die Mittelstation: "+M(N(s0)+" + "+N(v)+" * t = "+N(hM))+" lösen."],
+    sol:{viz:vPlane([0,xmaxG],[0,ymaxG],{W:560,H:400,xl:"t in min",yl:"h in m",sx:1,sy:200}),merk:M("d")+" ist der Startwert, "+M("k")+" die Änderung pro Einheit. Eine gesuchte Stelle findet man, indem man den Funktionsterm gleich dem Wert setzt.",steps:[
+      {t:"Startwert und Änderung pro Minute.",m:M("d = "+N(s0))+" &nbsp; und &nbsp; "+M("k = {"+N(hB)+" - "+N(s0)+"/"+N(T)+"} = "+N(v)),a:function(V){ V.L(v,s0,"--dx"); }},
+      {t:"Die Funktionsgleichung.",m:M("h(t) = "+N(v)+" * t + "+N(s0))},
+      {t:"Gesucht ist die Stelle mit dem Funktionswert "+N(hM)+".",m:M(N(v)+" * t + "+N(s0)+" = "+N(hM))+" &nbsp; also &nbsp; "+M("t = "+N(m)),a:function(V){ V.Sg(0,hM,m,hM,"--ink-3",0,{dash:"5 5",w:2}); V.Sg(m,0,m,hM,"--ink-3",.2,{dash:"5 5",w:2}); V.Pt(m,hM,"("+N(m)+" | "+N(hM)+")","--rise",.5); }}]} }; }},
   {title:"Lenas Behauptung",marks:["rab","lift"],mk:function(){ return {
-    fmt:"offen",help:helpStreifen("zwei"),q:"Der Listenpreis des Liftpasses ist heuer um 5 % höher als im Vorjahr. Lena meint: „Mit den 15 % Gruppenrabatt zahlen wir trotzdem genau 10 % weniger als den Listenpreis vom Vorjahr.“ Überprüfe Lenas Behauptung rechnerisch und begründe, warum sie stimmt oder nicht stimmt.",
-    model:"Preiserhöhung und Rabatt sind zwei Faktoren: "+M("1,05 * 0,85 = 0,8925")+". Die Klasse zahlt 89,25 % des Vorjahrespreises, also um 10,75 % weniger. Lenas Behauptung stimmt nicht. Die 15 % Rabatt werden vom erhöhten Preis berechnet und sind deshalb mehr als 15 % des Vorjahrespreises.",
-    points:["Die beiden Faktoren 1,05 und 0,85 sind multipliziert: 0,8925.","Das Ergebnis ist gedeutet: 10,75 % weniger, nicht 10 %.","Die Begründung steht da: Der Rabatt bezieht sich auf den bereits erhöhten Preis."],
-    tips:["Jede prozentuelle Änderung ist ein Faktor.","Rechne mit einem Vorjahrespreis von 100 €: erst plus 5 %, dann minus 15 % vom neuen Preis."],
+    fmt:"offen",help:helpStreifen("zwei"),q:"Der Listenpreis des Liftpasses ist heuer um "+N(a)+" % höher als im Vorjahr. Lena meint: „Mit den "+N(r)+" % Gruppenrabatt zahlen wir trotzdem genau "+N(claim)+" % weniger als den Listenpreis vom Vorjahr.“ Überprüfe Lenas Behauptung rechnerisch und begründe, warum sie stimmt oder nicht stimmt.",
+    model:"Preiserhöhung und Rabatt sind zwei Faktoren: "+M(N(rd(1+a/100))+" * "+N(fq)+" = "+N(fa))+". Die Klasse zahlt "+N(rd(fa*100))+" % des Vorjahrespreises, also um "+N(les)+" % weniger. Lenas Behauptung stimmt nicht. Die "+N(r)+" % Rabatt werden vom erhöhten Preis berechnet und sind deshalb mehr als "+N(r)+" % des Vorjahrespreises.",
+    points:["Die beiden Faktoren "+N(rd(1+a/100))+" und "+N(fq)+" sind multipliziert: "+N(fa)+".","Das Ergebnis ist gedeutet: "+N(les)+" % weniger, nicht "+N(claim)+" %.","Die Begründung steht da: Der Rabatt bezieht sich auf den bereits erhöhten Preis."],
+    tips:["Jede prozentuelle Änderung ist ein Faktor.","Rechne mit einem Vorjahrespreis von 100 €: erst plus "+N(a)+" %, dann minus "+N(r)+" % vom neuen Preis."],
     sol:{viz:vBars(125,3),merk:"Prozentsätze hintereinander werden nicht addiert oder subtrahiert. Die Faktoren werden multipliziert.",steps:[
-      {t:"Der Vorjahrespreis sind 100 %. Heuer ist der Listenpreis um 5 % höher.",a:function(V){ V.bar(0,"Vorjahr",100,"100 %","--ink-3"); V.op(0,"· 1,05"); V.bar(1,"Listenpreis heuer",105,"105 %","--dx",.4); }},
-      {t:"Davon 15 % Rabatt: 85 % des neuen Preises bleiben.",m:M("1,05 * 0,85 = 0,8925"),a:function(V){ V.op(1,"· 0,85"); V.bar(2,"mit Rabatt",89.25,"89,25 %","--right",.4); V.ref(100,"100 %",.9); }},
-      "15 % von 105 % sind 15,75 % des Vorjahrespreises. Abgezogen wird also mehr als 15 %, und die Klasse zahlt um 10,75 % weniger als im Vorjahr."]} }; }}
-  ]});
+      {t:"Der Vorjahrespreis sind 100 %. Heuer ist der Listenpreis um "+N(a)+" % höher.",a:function(V){ V.bar(0,"Vorjahr",100,"100 %","--ink-3"); V.op(0,"· "+N(rd(1+a/100))); V.bar(1,"Listenpreis heuer",100+a,N(100+a)+" %","--dx",.4); }},
+      {t:"Davon "+N(r)+" % Rabatt: "+N(100-r)+" % des neuen Preises bleiben.",m:M(N(rd(1+a/100))+" * "+N(fq)+" = "+N(fa)),a:function(V){ V.op(1,"· "+N(fq)); V.bar(2,"mit Rabatt",rd(fa*100),N(rd(fa*100))+" %","--right",.4); V.ref(100,"100 %",.9); }},
+      N(r)+" % von "+N(100+a)+" % sind "+N(rab2)+" % des Vorjahrespreises. Abgezogen wird also mehr als "+N(r)+" %, und die Klasse zahlt um "+N(les)+" % weniger als im Vorjahr."]} }; }}
+  ]};
+  return T1;
+}
+(function(){
+  var I=tour1(SKI_PRE[0]);
+  TOURS.push({id:"g1",title:"Skikurs der 5A",sub:"Kosten, Rabatt und eine Gondelfahrt",angabe:I.angabe,parts:I.parts,vary:function(){ return tour1(pick(SKI_PRE)); }});
+})();
 
 /* ---------- Tour 2 · Radtour ---------- */
-function radDraw(both){ return function(P){ P.seg(0,0,3,60,"--left",3); P.label(3,60,"Mira","--left",{dx:8,dy:5});
-  if(both){ P.seg(.5,0,2.5,60,"--right",3); P.label(2.5,60,"Jonas","--right",{dx:-10,dy:-8,anchor:"end"}); } }; }
-var RADG={W:560,H:420,xr:[0,3.5],yr:[0,70],xl:"t in h",yl:"s in km",sx:.5,sy:10,step:.25};
-TOURS.push({id:"g2",title:"Radtour an der Mur",sub:"Zwei Geraden, ein Treffpunkt und Gegenwind",
-  angabe:"<p>Mira und Jonas fahren am Murradweg flussabwärts. "+amk("mira","Mira startet um 9:00 Uhr und fährt gleichmäßig mit 20 km/h")+". "+amk("jonas","Jonas startet am selben Ort eine halbe Stunde später")+". Er hat ein E-Bike und "+amk("jv","fährt gleichmäßig mit 30 km/h")+".</p>"+
-    "<p>Die Zeit "+M("t")+" wird "+amk("t0","in Stunden ab 9:00 Uhr")+" gemessen, der Weg "+M("s")+" in Kilometern ab dem Startort. "+amk("ziel","Das Ziel liegt 60 km vom Startort entfernt")+".</p>",
+/* P = {vM,vJ,d,D,sY}: Miras und Jonas' Geschwindigkeit (km/h), Verspätung (h), Strecke (km), Raster für die Zeichnung.
+   Treffpunkt bei t = vJ*d/(vJ-vM). Die Voreinstellungen haben glatte Werte. */
+var RAD_PRE=[
+  {vM:20,vJ:30,d:.5,D:60,sY:5},
+  {vM:16,vJ:24,d:.5,D:48,sY:2},
+  {vM:12,vJ:18,d:1,D:72,sY:2},
+  {vM:24,vJ:36,d:.5,D:72,sY:2}];
+function tour2(P){
+  var N=num, rd=function(v){ return Math.round(v*1e6)/1e6; };
+  var vM=P.vM, vJ=P.vJ, d=P.d, D=P.D, tM=rd(D/vM), tJ=rd(D/vJ+d), ts=rd(vJ*d/(vJ-vM)), ss=rd(vM*ts), cJ=vJ*d, mins=Math.round((tM-tJ)*60);
+  var xmax=Math.ceil((tM+.5)*2)/2, ymax=Math.ceil((D+5)/10)*10, sx=xmax>4?1:.5, ymin=-Math.ceil((cJ+4)/10)*10;
+  var dTxt=d===.5?"eine halbe Stunde":"eine Stunde";
+  var RADG={W:560,H:420,xr:[0,xmax],yr:[0,ymax],xl:"t in h",yl:"s in km",sx:sx,sy:10,step:.25};
+  function radDraw(both){ return function(Q){ Q.seg(0,0,tM,D,"--left",3); Q.label(tM,D,"Mira","--left",{dx:8,dy:5});
+    if(both){ Q.seg(d,0,tJ,D,"--right",3); Q.label(tJ,D,"Jonas","--right",{dx:-10,dy:-8,anchor:"end"}); } }; }
+  var plane=function(o){ o=o||{}; return vPlane([0,xmax],o.yr||[0,ymax],{W:560,H:o.H||400,xl:"t in h",yl:"s in km",sx:sx,sy:10,pre:o.pre}); };
+  var jterm=N(vJ)+"t - "+N(cJ);
+  var stud="s_J(t) = "+N(vJ)+" * (t - "+N(d)+")";
+  var T2={
+  angabe:"<p>Mira und Jonas fahren am Murradweg flussabwärts. "+amk("mira","Mira startet um 9:00 Uhr und fährt gleichmäßig mit "+N(vM)+" km/h")+". "+amk("jonas","Jonas startet am selben Ort "+dTxt+" später")+". Er hat ein E-Bike und "+amk("jv","fährt gleichmäßig mit "+N(vJ)+" km/h")+".</p>"+
+    "<p>Die Zeit "+M("t")+" wird "+amk("t0","in Stunden ab 9:00 Uhr")+" gemessen, der Weg "+M("s")+" in Kilometern ab dem Startort. "+amk("ziel","Das Ziel liegt "+N(D)+" km vom Startort entfernt")+".</p>",
   parts:[
-  {title:"Wer ist wann wo?",marks:["mira","jonas","t0","ziel"],note:"Mira: "+M("s_M(t) = 20 * t")+", am Ziel bei "+M("t = 3"),mk:function(){ return {
+  {title:"Wer ist wann wo?",marks:["mira","jonas","t0","ziel"],note:"Mira: "+M("s_M(t) = "+N(vM)+" * t")+", am Ziel bei "+M("t = "+N(tM)),mk:function(){ return {
     fmt:"input",help:false,q:M("s_M(t)")+" ist Miras Weg und "+M("s_J(t)")+" Jonas' Weg zum Zeitpunkt "+M("t")+". Ergänze.",
-    fields:[{l:M("s_M(1,5) ="),r:30,u:"km",w:"20 km/h mal 1,5 h."},{l:"Mira ist am Ziel bei "+M("t ="),r:3,u:"h",w:"60 km : 20 km/h."},{l:M("s_J(0,25) ="),r:0,u:"km",w:"Um 9:15 Uhr ist Jonas noch nicht losgefahren."}],
+    fields:[{l:M("s_M(1,5) ="),r:rd(vM*1.5),u:"km",w:N(vM)+" km/h mal 1,5 h."},{l:"Mira ist am Ziel bei "+M("t ="),r:tM,u:"h",w:N(D)+" km : "+N(vM)+" km/h."},{l:M("s_J(0,25) ="),r:0,u:"km",w:"Um 9:15 Uhr ist Jonas noch nicht losgefahren."}],
     tips:["Weg ist Geschwindigkeit mal Zeit.","Lies genau, wann Jonas startet. Welche Uhrzeit ist "+M("t = 0,25")+"?"],
-    sol:{viz:vPlane([0,3.5],[0,70],{W:560,H:400,xl:"t in h",yl:"s in km",sx:.5,sy:10}),merk:"Vor dem Einsetzen klären, was die Stelle bedeutet. "+M("t = 0,25")+" ist 9:15 Uhr.",steps:[
-      {t:"Mira fährt in jeder Stunde 20 km.",m:M("s_M(1,5) = 20 * 1,5 = 30"),a:function(V){ V.Sg(0,0,3,60,"--left",0); V.Pt(1.5,30,"(1,5 | 30)","--dy",.7,{dx:-10,anchor:"end"}); }},
-      {t:"Für 60 km braucht sie 3 Stunden.",m:M("60 : 20 = 3"),a:function(V){ V.Pt(3,60,"Ziel","--rise",0,{dx:-10,anchor:"end"}); }},
-      {t:"Jonas startet erst bei "+M("t = 0,5")+". Davor ist sein Weg 0.",m:M("s_J(0,25) = 0"),a:function(V){ V.Sg(0,0,.5,0,"--right",0,{w:5}); V.Pt(.5,0,"Start Jonas","--right",.4,{dx:8,dy:-12}); }}]} }; }},
-  {title:"Ein Term für Jonas",marks:["jonas","jv"],note:"Jonas: "+M("s_J(t) = 30 * (t - 0,5) = 30t - 15")+" für "+M("t >= 0,5"),mk:function(){ return {
-    fmt:"input",help:false,q:"Gib einen Term für Jonas' Weg "+M("s_J(t)")+" an, der ab seinem Start gilt, also für "+M("t >= 0,5")+".",
-    fields:[{l:M("s_J(t) ="),kind:"term",r:"30(t-0,5)",vars:["t"],show:M("30 * (t - 0,5) = 30t - 15"),ex:"30t - 15",w:"Zum Zeitpunkt "+M("t")+" ist Jonas erst "+M("t - 0,5")+" Stunden unterwegs."}],
-    tips:["Wie lange ist Jonas zum Zeitpunkt "+M("t")+" schon unterwegs?","Probe: Bei "+M("t = 0,5")+" muss 0 herauskommen, bei "+M("t = 1,5")+" müssen es 30 km sein."],
-    sol:{viz:vPlane([0,3.5],[0,70],{W:560,H:400,xl:"t in h",yl:"s in km",sx:.5,sy:10}),merk:"Startet etwas später, wird von der Zeit die Verspätung abgezogen, bevor mit der Geschwindigkeit multipliziert wird.",steps:[
-      {t:"Zum Zeitpunkt "+M("t")+" fährt Jonas seit "+M("t - 0,5")+" Stunden.",m:M("s_J(t) = 30 * (t - 0,5)"),a:function(V){ V.Pt(.5,0,"Start","--right",0,{dx:8,dy:-12}); }},
-      {t:"Ausmultipliziert.",m:M("s_J(t) = 30t - 15"),a:function(V){ V.Sg(.5,0,2.5,60,"--right",0); }},
-      {t:"Probe mit zwei Zeitpunkten.",m:M("s_J(0,5) = 0")+" &nbsp; und &nbsp; "+M("s_J(1,5) = 30"),a:function(V){ V.Pt(1.5,30,"(1,5 | 30)","--dy",0,{dx:10,dy:16}); }}]} }; }},
+    sol:{viz:plane(),merk:"Vor dem Einsetzen klären, was die Stelle bedeutet. "+M("t = 0,25")+" ist 9:15 Uhr.",steps:[
+      {t:"Mira fährt in jeder Stunde "+N(vM)+" km.",m:M("s_M(1,5) = "+N(vM)+" * 1,5 = "+N(rd(vM*1.5))),a:function(V){ V.Sg(0,0,tM,D,"--left",0); V.Pt(1.5,rd(vM*1.5),"(1,5 | "+N(rd(vM*1.5))+")","--dy",.7,{dx:-10,anchor:"end"}); }},
+      {t:"Für "+N(D)+" km braucht sie "+N(tM)+" Stunden.",m:M(N(D)+" : "+N(vM)+" = "+N(tM)),a:function(V){ V.Pt(tM,D,"Ziel","--rise",0,{dx:-10,anchor:"end"}); }},
+      {t:"Jonas startet erst bei "+M("t = "+N(d))+". Davor ist sein Weg 0.",m:M("s_J(0,25) = 0"),a:function(V){ V.Sg(0,0,d,0,"--right",0,{w:5}); V.Pt(d,0,"Start Jonas","--right",.4,{dx:8,dy:-12}); }}]} }; }},
+  {title:"Ein Term für Jonas",marks:["jonas","jv"],note:"Jonas: "+M(stud+" = "+jterm)+" für "+M("t >= "+N(d)),mk:function(){ return {
+    fmt:"input",help:false,q:"Gib einen Term für Jonas' Weg "+M("s_J(t)")+" an, der ab seinem Start gilt, also für "+M("t >= "+N(d))+".",
+    fields:[{l:M("s_J(t) ="),kind:"term",r:N(vJ)+"(t-"+N(d)+")",vars:["t"],show:M(N(vJ)+" * (t - "+N(d)+") = "+jterm),ex:jterm,w:"Zum Zeitpunkt "+M("t")+" ist Jonas erst "+M("t - "+N(d))+" Stunden unterwegs."}],
+    tips:["Wie lange ist Jonas zum Zeitpunkt "+M("t")+" schon unterwegs?","Probe: Bei "+M("t = "+N(d))+" muss 0 herauskommen, bei "+M("t = "+N(d+1))+" müssen es "+N(vJ)+" km sein."],
+    sol:{viz:plane(),merk:"Startet etwas später, wird von der Zeit die Verspätung abgezogen, bevor mit der Geschwindigkeit multipliziert wird.",steps:[
+      {t:"Zum Zeitpunkt "+M("t")+" fährt Jonas seit "+M("t - "+N(d))+" Stunden.",m:M("s_J(t) = "+N(vJ)+" * (t - "+N(d)+")"),a:function(V){ V.Pt(d,0,"Start","--right",0,{dx:8,dy:-12}); }},
+      {t:"Ausmultipliziert.",m:M("s_J(t) = "+jterm),a:function(V){ V.Sg(d,0,tJ,D,"--right",0); }},
+      {t:"Probe mit zwei Zeitpunkten.",m:M("s_J("+N(d)+") = 0")+" &nbsp; und &nbsp; "+M("s_J("+N(d+1)+") = "+N(vJ)),a:function(V){ V.Pt(d+1,vJ,"("+N(d+1)+" | "+N(vJ)+")","--dy",0,{dx:10,dy:16}); }}]} }; }},
   {title:"Jonas im Diagramm",marks:["jonas","jv"],mk:function(){ return {
     fmt:"konstr",q:"Miras Weg ist bereits eingezeichnet. Zeichne den Graphen von "+M("s_J")+" dazu.",
-    W:560,H:420,xr:[0,3.5],yr:[0,70],xl:"t in h",yl:"s in km",sx:.5,sy:10,snapX:.5,snapY:5,k:30,d:-15,pre:radDraw(false),
-    tips:["Jonas startet bei "+M("t = 0,5")+" mit dem Weg 0.","Eine Stunde später, bei "+M("t = 1,5")+", hat er 30 km zurückgelegt."],
-    sol:{viz:vPlane([0,3.5],[0,70],{W:560,H:420,xl:"t in h",yl:"s in km",sx:.5,sy:10,pre:radDraw(false)}),merk:"Die steilere Gerade gehört zur höheren Geschwindigkeit. Der Startpunkt liegt dort, wo die Fahrt beginnt.",steps:[
-      {t:"Jonas' Fahrt beginnt bei "+M("t = 0,5")+" auf der waagrechten Achse.",a:function(V){ V.Pt(.5,0,"(0,5 | 0)","--right",0,{dx:8,dy:-12}); }},
-      {t:"In einer Stunde legt er 30 km zurück.",a:function(V){ V.T(.5,0,1,30,0); V.Pt(1.5,30,"","--dy",1.3); }},
-      {t:"Die Gerade durch beide Punkte. Sie ist steiler als Miras Gerade.",a:function(V){ V.Sg(.5,0,2.5,60,"--right",0); }}]} }; }},
-  {title:"Der Treffpunkt",marks:["mira","jv"],note:"Jonas holt Mira bei "+M("t = 1,5")+" ein, 30 km vom Start",mk:function(){ return {
+    W:560,H:420,xr:[0,xmax],yr:[0,ymax],xl:"t in h",yl:"s in km",sx:sx,sy:10,snapX:.5,snapY:P.sY,k:vJ,d:-cJ,pre:radDraw(false),
+    tips:["Jonas startet bei "+M("t = "+N(d))+" mit dem Weg 0.","Eine Stunde später, bei "+M("t = "+N(d+1))+", hat er "+N(vJ)+" km zurückgelegt."],
+    sol:{viz:plane({H:420,pre:radDraw(false)}),merk:"Die steilere Gerade gehört zur höheren Geschwindigkeit. Der Startpunkt liegt dort, wo die Fahrt beginnt.",steps:[
+      {t:"Jonas' Fahrt beginnt bei "+M("t = "+N(d))+" auf der waagrechten Achse.",a:function(V){ V.Pt(d,0,"("+N(d)+" | 0)","--right",0,{dx:8,dy:-12}); }},
+      {t:"In einer Stunde legt er "+N(vJ)+" km zurück.",a:function(V){ V.T(d,0,1,vJ,0); V.Pt(d+1,vJ,"","--dy",1.3); }},
+      {t:"Die Gerade durch beide Punkte. Sie ist steiler als Miras Gerade.",a:function(V){ V.Sg(d,0,tJ,D,"--right",0); }}]} }; }},
+  {title:"Der Treffpunkt",marks:["mira","jv"],note:"Jonas holt Mira bei "+M("t = "+N(ts))+" ein, "+N(ss)+" km vom Start",mk:function(){ return {
     fmt:"input",fig:gfig(RADG.W,RADG.H,RADG.xr,RADG.yr,RADG.xl,RADG.yl,RADG.sx,RADG.sy,radDraw(true)),
-    help:helpKreuz({W:RADG.W,H:RADG.H,xr:RADG.xr,yr:RADG.yr,xl:RADG.xl,yl:RADG.yl,sx:RADG.sx,sy:RADG.sy,step:.25,draw:radDraw(true)},[function(t){ return t<=3?20*t:NaN; },function(t){ return t>=.5&&t<=2.5?30*t-15:NaN; }]),
+    help:helpKreuz({W:RADG.W,H:RADG.H,xr:RADG.xr,yr:RADG.yr,xl:RADG.xl,yl:RADG.yl,sx:RADG.sx,sy:RADG.sy,step:.25,draw:radDraw(true)},[function(t){ return t<=tM?vM*t:NaN; },function(t){ return t>=d&&t<=tJ?vJ*t-cJ:NaN; }]),
     q:"Wann und wo holt Jonas Mira ein? Berechne und überprüfe dein Ergebnis am Diagramm.",
-    fields:[{l:"Zeitpunkt "+M("t ="),r:1.5,u:"h",w:"20t = 30t − 15."},{l:"Entfernung vom Startort:",r:30,u:"km",w:"20 · 1,5."},{l:"Um wie viele Minuten ist Jonas früher am Ziel als Mira?",r:30,u:"min",w:"Mira bei t = 3, Jonas bei t = 2,5."}],
-    tips:["Beim Einholen sind beide gleich weit: "+M("s_M(t) = s_J(t)")+".",M("20t = 30t - 15")+". Bring alle "+M("t")+" auf eine Seite."],
-    sol:{viz:vPlane([0,3.5],[0,70],{W:560,H:420,xl:"t in h",yl:"s in km",sx:.5,sy:10,pre:radDraw(true)}),merk:"Schnittpunkt zweier Graphen: beide Funktionsterme gleichsetzen. Im Zeit-Weg-Diagramm ist das der Treffpunkt.",steps:[
-      {t:"Gleich weit heißt: Die beiden Terme liefern denselben Wert.",m:M("20t = 30t - 15")},
-      {t:M("20t")+" abziehen und 15 addieren.",m:M("15 = 10t")+" &nbsp; also &nbsp; "+M("t = 1,5")},
-      {t:"In einen der beiden Terme einsetzen.",m:M("s_M(1,5) = 20 * 1,5 = 30"),a:function(V){ V.G(1.5,30); V.Pt(1.5,30,"(1,5 | 30)","--rise",.6,{dx:-10,anchor:"end"}); }},
-      {t:"Jonas ist bei "+M("t = 2,5")+" am Ziel, Mira bei "+M("t = 3")+".",m:M("3 - 2,5 = 0,5")+" h = 30 min",a:function(V){ V.Pt(2.5,60,"","--right"); V.Pt(3,60,"","--dx",.3); }}]} }; }},
-  {title:"Gegenwind",marks:["mira"],mk:function(){ return {
+    fields:[{l:"Zeitpunkt "+M("t ="),r:ts,u:"h",w:N(vM)+"t = "+N(vJ)+"t − "+N(cJ)+"."},{l:"Entfernung vom Startort:",r:ss,u:"km",w:N(vM)+" · "+N(ts)+"."},{l:"Um wie viele Minuten ist Jonas früher am Ziel als Mira?",r:mins,u:"min",w:"Mira bei t = "+N(tM)+", Jonas bei t = "+N(tJ)+"."}],
+    tips:["Beim Einholen sind beide gleich weit: "+M("s_M(t) = s_J(t)")+".",M(N(vM)+"t = "+N(vJ)+"t - "+N(cJ))+". Bring alle "+M("t")+" auf eine Seite."],
+    sol:{viz:plane({H:420,pre:radDraw(true)}),merk:"Schnittpunkt zweier Graphen: beide Funktionsterme gleichsetzen. Im Zeit-Weg-Diagramm ist das der Treffpunkt.",steps:[
+      {t:"Gleich weit heißt: Die beiden Terme liefern denselben Wert.",m:M(N(vM)+"t = "+N(vJ)+"t - "+N(cJ))},
+      {t:M(N(vM)+"t")+" abziehen und "+N(cJ)+" addieren.",m:M(N(cJ)+" = "+N(vJ-vM)+"t")+" &nbsp; also &nbsp; "+M("t = "+N(ts))},
+      {t:"In einen der beiden Terme einsetzen.",m:M("s_M("+N(ts)+") = "+N(vM)+" * "+N(ts)+" = "+N(ss)),a:function(V){ V.G(ts,ss); V.Pt(ts,ss,"("+N(ts)+" | "+N(ss)+")","--rise",.6,{dx:-10,anchor:"end"}); }},
+      {t:"Jonas ist bei "+M("t = "+N(tJ))+" am Ziel, Mira bei "+M("t = "+N(tM))+".",m:M(N(tM)+" - "+N(tJ)+" = "+N(rd(tM-tJ)))+" h = "+N(mins)+" min",a:function(V){ V.Pt(tJ,D,"","--right"); V.Pt(tM,D,"","--dx",.3); }}]} }; }},
+  {title:"Gegenwind",marks:["mira"],mk:function(){ var v1=rd(vM*.75), v2=rd(v1*1.25); return {
     fmt:"input",help:helpStreifen("zwei"),q:"Auf dem letzten Stück bläst Gegenwind, und Miras Geschwindigkeit sinkt um 25 %. Nach einer kurzen Rast erhöht sie die verringerte Geschwindigkeit wieder um 25 %.",
-    fields:[{l:"Geschwindigkeit im Gegenwind:",r:15,u:"km/h",w:"20 · 0,75."},{l:"Geschwindigkeit nach der Erhöhung:",r:18.75,u:"km/h",w:"15 · 1,25."},{l:"Änderung gegenüber den ursprünglichen 20 km/h in Prozent (mit Minus, wenn sie langsamer ist):",r:-6.25,tol:.011,u:"%",w:"0,75 · 1,25 = 0,9375."}],
-    tips:["Die Erhöhung um 25 % bezieht sich auf die verringerte Geschwindigkeit, nicht auf 20 km/h.","Beide Änderungen als Faktoren: 0,75 und 1,25."],
+    fields:[{l:"Geschwindigkeit im Gegenwind:",r:v1,u:"km/h",w:N(vM)+" · 0,75."},{l:"Geschwindigkeit nach der Erhöhung:",r:v2,u:"km/h",w:N(v1)+" · 1,25."},{l:"Änderung gegenüber den ursprünglichen "+N(vM)+" km/h in Prozent (mit Minus, wenn sie langsamer ist):",r:-6.25,tol:.011,u:"%",w:"0,75 · 1,25 = 0,9375."}],
+    tips:["Die Erhöhung um 25 % bezieht sich auf die verringerte Geschwindigkeit, nicht auf "+N(vM)+" km/h.","Beide Änderungen als Faktoren: 0,75 und 1,25."],
     sol:{viz:vBars(125,3),merk:"Minus 25 % und danach plus 25 % führen nicht zum Ausgangswert zurück. Die Grundwerte sind verschieden.",steps:[
-      {t:"Um 25 % langsamer: Faktor 0,75.",m:M("20 * 0,75 = 15"),a:function(V){ V.bar(0,"ursprünglich",100,"20 km/h","--ink-3"); V.op(0,"· 0,75"); V.bar(1,"Gegenwind",75,"15 km/h","--dx",.4); }},
-      {t:"Um 25 % schneller, gerechnet von 15 km/h.",m:M("15 * 1,25 = 18,75"),a:function(V){ V.op(1,"· 1,25"); V.bar(2,"nach der Rast",93.75,"18,75 km/h","--right",.4); V.ref(100,"100 %",.9); }},
+      {t:"Um 25 % langsamer: Faktor 0,75.",m:M(N(vM)+" * 0,75 = "+N(v1)),a:function(V){ V.bar(0,"ursprünglich",100,N(vM)+" km/h","--ink-3"); V.op(0,"· 0,75"); V.bar(1,"Gegenwind",75,N(v1)+" km/h","--dx",.4); }},
+      {t:"Um 25 % schneller, gerechnet von "+N(v1)+" km/h.",m:M(N(v1)+" * 1,25 = "+N(v2)),a:function(V){ V.op(1,"· 1,25"); V.bar(2,"nach der Rast",93.75,N(v2)+" km/h","--right",.4); V.ref(100,"100 %",.9); }},
       {t:"Beide Faktoren zusammen.",m:M("0,75 * 1,25 = 0,9375")+" &rarr; −6,25 %"}]} }; }},
-  {title:"Durchschnitt mit Pause",marks:["ziel"],mk:function(){ return {
+  {title:"Durchschnitt mit Pause",marks:["ziel"],mk:function(){ var Tt=rd(D/vJ+.5); return {
     fmt:"input",help:false,q:"Auf einer anderen Tour legt Jonas "+M("s")+" Kilometer zurück. Samt einer Pause von "+M("p")+" Minuten ist er dafür "+M("T")+" Stunden unterwegs. Gib einen Term für seine Durchschnittsgeschwindigkeit "+M("v")+" (in km/h) während der reinen Fahrzeit an.",
     fields:[{l:M("v ="),kind:"term",r:"s/(T - p/60)",vars:["s","T","p"],show:M("{s/T - {p/60}}"),ex:"s/(T - p/60)",w:"Weg durch reine Fahrzeit. Die Pause muss in Stunden umgerechnet werden."}],
     tips:[M("p")+" Minuten sind "+M("{p/60}")+" Stunden.","Reine Fahrzeit ist Gesamtzeit minus Pause. Der Nenner braucht beim Eintippen eine Klammer."],
     sol:{merk:"Vor dem Rechnen die Einheiten angleichen. Eine Zahlenprobe zeigt, ob der Term stimmen kann.",steps:[
       {t:"Die Pause in Stunden.",m:M("{p/60}")},{t:"Die reine Fahrzeit.",m:M("T - {p/60}")},{t:"Geschwindigkeit ist Weg durch Zeit.",m:M("v = {s/T - {p/60}}")},
-      {t:"Zahlenprobe mit Jonas' heutiger Fahrt, falls er 30 Minuten rastet: 60 km, insgesamt 2,5 Stunden.",m:M("{60/2,5 - 0,5} = 30")+" km/h"}]} }; }},
+      {t:"Zahlenprobe mit Jonas' heutiger Fahrt, falls er 30 Minuten rastet: "+N(D)+" km, insgesamt "+N(Tt)+" Stunden.",m:M("{"+N(D)+"/"+N(Tt)+" - 0,5} = "+N(vJ))+" km/h"}]} }; }},
   {title:"Das Vorderrad",marks:[],mk:function(){ var g1=shGap(["rational","irrational","eine natürliche Zahl"],1), g2=shGap(["π irrational ist und das 0,7-Fache einer irrationalen Zahl irrational bleibt","0,7 eine abbrechende Dezimalzahl ist","sich jeder Umfang mit dem Maßband messen lässt"],0);
+    var turns=Math.round(D*1000/(.7*Math.PI)/100)*100;
     g1.w=M("0,7 * π = 2,19911…")+" bricht nie ab und wird nie periodisch."; g2.w="Wäre "+M("0,7 * π")+" ein Bruch, dann wäre auch π einer. Dass 0,7 rational ist, hilft nicht. Messen liefert immer nur einen gerundeten Wert.";
     return { fmt:"luecke",help:false,q:"Jonas' Vorderrad hat einen Durchmesser von 0,7 m. Bei einer Umdrehung rollt es um den Umfang "+M("u = 0,7 * π")+" Meter weiter. Ergänze den Satz so, dass eine richtige Aussage mit richtiger Begründung entsteht.",
     satz:"Die Maßzahl des Umfangs ist ___, weil ___.",gaps:[g1,g2],
@@ -8658,251 +8760,529 @@ TOURS.push({id:"g2",title:"Radtour an der Mur",sub:"Zwei Geraden, ein Treffpunkt
     sol:{viz:vSets(),merk:"Rational mal irrational bleibt irrational, solange der rationale Faktor nicht 0 ist. Gemessen und gerechnet wird trotzdem mit gerundeten Werten.",steps:[
       {t:"π ist irrational.",a:function(V){ V.drop("π","I"); V.drop("0,7","Q",.3); }},
       {t:"Wäre "+M("0,7 * π = {a/b}")+", dann wäre "+M("π = {10a/7b}")+" ebenfalls ein Bruch. Das stimmt nicht.",a:function(V){ V.drop("0,7 · π","I"); }},
-      "Für die Praxis genügt ein Näherungswert: Der Umfang beträgt rund 2,2 m. Auf 60 km dreht sich das Rad etwa 27 300-mal."]} }; }},
+      "Für die Praxis genügt ein Näherungswert: Der Umfang beträgt rund 2,2 m. Auf "+N(D)+" km dreht sich das Rad etwa "+N(turns)+"-mal."]} }; }},
   {title:"Ein Wert ohne Bedeutung",marks:["jonas","ziel"],mk:function(){ return {
-    fmt:"offen",help:false,q:"Der Term "+M("30t - 15")+" aus Teilaufgabe b) liefert für "+M("t = 0")+" den Wert −15. Erkläre im Kontext, warum dieser Wert keine Bedeutung hat. Gib außerdem an, für welche Zeitpunkte "+M("t")+" der Term Jonas' Weg auf dieser Tour beschreibt.",
-    model:"Bei "+M("t = 0")+", also um 9:00 Uhr, ist Jonas noch nicht losgefahren. Ein Weg von −15 km ergibt keinen Sinn, sein Weg ist zu diesem Zeitpunkt 0. Der Term gilt ab seinem Start bei "+M("t = 0,5")+" und bis zu seiner Ankunft bei "+M("t = 2,5")+", wenn die 60 km erreicht sind.",
-    points:["Um 9:00 Uhr ist Jonas noch nicht unterwegs. Sein Weg ist 0 und kann nicht negativ sein.","Der Term gilt ab "+M("t = 0,5")+", dem Start von Jonas.","Der Term gilt bis "+M("t = 2,5")+", der Ankunft am Ziel."],
-    tips:["Welche Uhrzeit ist "+M("t = 0")+"? Was macht Jonas da?","Für das Ende: Wann hat Jonas die 60 km geschafft?"],
-    sol:{viz:vPlane([0,3.5],[-20,70],{W:560,H:420,xl:"t in h",yl:"s in km",sx:.5,sy:10}),merk:"Ein Funktionsterm beschreibt den Kontext nur dort, wo er sinnvoll ist. Dieser Bereich gehört zur Funktion dazu.",steps:[
-      {t:"Der Term allein ergibt eine Gerade, die bei −15 beginnt.",a:function(V){ V.Sg(0,-15,.5,0,"--fall",0,{dash:"6 5",w:2.5}); V.Pt(0,-15,"(0 | −15)","--fall",.4,{hollow:1}); }},
-      {t:"Sinnvoll ist sie erst ab Jonas' Start.",a:function(V){ V.Pt(.5,0,"Start","--right",0,{dx:8,dy:-12}); V.Sg(.5,0,2.5,60,"--right",.3); }},
-      {t:"Und nur bis zur Ankunft am Ziel.",m:M("30t - 15 = 60")+" &nbsp; also &nbsp; "+M("t = 2,5"),a:function(V){ V.Pt(2.5,60,"Ziel","--rise",0,{dx:10}); }}]} }; }}
-  ]});
+    fmt:"offen",help:false,q:"Der Term "+M(jterm)+" aus Teilaufgabe b) liefert für "+M("t = 0")+" den Wert −"+N(cJ)+". Erkläre im Kontext, warum dieser Wert keine Bedeutung hat. Gib außerdem an, für welche Zeitpunkte "+M("t")+" der Term Jonas' Weg auf dieser Tour beschreibt.",
+    model:"Bei "+M("t = 0")+", also um 9:00 Uhr, ist Jonas noch nicht losgefahren. Ein Weg von −"+N(cJ)+" km ergibt keinen Sinn, sein Weg ist zu diesem Zeitpunkt 0. Der Term gilt ab seinem Start bei "+M("t = "+N(d))+" und bis zu seiner Ankunft bei "+M("t = "+N(tJ))+", wenn die "+N(D)+" km erreicht sind.",
+    points:["Um 9:00 Uhr ist Jonas noch nicht unterwegs. Sein Weg ist 0 und kann nicht negativ sein.","Der Term gilt ab "+M("t = "+N(d))+", dem Start von Jonas.","Der Term gilt bis "+M("t = "+N(tJ))+", der Ankunft am Ziel."],
+    tips:["Welche Uhrzeit ist "+M("t = 0")+"? Was macht Jonas da?","Für das Ende: Wann hat Jonas die "+N(D)+" km geschafft?"],
+    sol:{viz:plane({yr:[ymin,ymax],H:420}),merk:"Ein Funktionsterm beschreibt den Kontext nur dort, wo er sinnvoll ist. Dieser Bereich gehört zur Funktion dazu.",steps:[
+      {t:"Der Term allein ergibt eine Gerade, die bei −"+N(cJ)+" beginnt.",a:function(V){ V.Sg(0,-cJ,d,0,"--fall",0,{dash:"6 5",w:2.5}); V.Pt(0,-cJ,"(0 | −"+N(cJ)+")","--fall",.4,{hollow:1}); }},
+      {t:"Sinnvoll ist sie erst ab Jonas' Start.",a:function(V){ V.Pt(d,0,"Start","--right",0,{dx:8,dy:-12}); V.Sg(d,0,tJ,D,"--right",.3); }},
+      {t:"Und nur bis zur Ankunft am Ziel.",m:M(jterm+" = "+N(D))+" &nbsp; also &nbsp; "+M("t = "+N(tJ)),a:function(V){ V.Pt(tJ,D,"Ziel","--rise",0,{dx:10}); }}]} }; }}
+  ]};
+  return T2;
+}
+(function(){
+  var I=tour2(RAD_PRE[0]);
+  TOURS.push({id:"g2",title:"Radtour an der Mur",sub:"Zwei Geraden, ein Treffpunkt und Gegenwind",angabe:I.angabe,parts:I.parts,vary:function(){ return tour2(pick(RAD_PRE)); }});
+})();
 
 /* ---------- Tour 3 · Schülerzeitung ---------- */
-TOURS.push({id:"g3",title:"Schülerzeitung „Pausenblick“",sub:"Druckkosten, Gewinnschwelle und ein Preisexperiment",
-  angabe:"<p>Die Redaktion der Schülerzeitung „Pausenblick“ lässt die Winterausgabe drucken. Die Druckerei verlangt "+amk("fix","120 € für das Einrichten der Maschine")+" und "+amk("stk","0,80 € pro gedrucktem Heft")+". Verkauft wird das Heft in der Pause um "+amk("vp","2 €")+".</p>"+
+/* P = {F,s,p,A,inc,q,pn,qn}: Einrichtung (€), Druckpreis je Heft (€), Verkaufspreis (€), geplante Auflage, Preisanstieg der Druckerei (%),
+   verkaufter Anteil (%), neuer Verkaufspreis (€), neuer verkaufter Anteil (%). Die Gewinnschwelle liegt immer bei 100 Heften (F = 100 · (p − s)). */
+var ZEI_PRE=[
+  {F:120,s:.8,p:2,A:250,inc:15,q:80,pn:2.5,qn:70},
+  {F:150,s:.5,p:2,A:240,inc:20,q:75,pn:2.5,qn:65},
+  {F:90,s:.6,p:1.5,A:250,inc:10,q:80,pn:2,qn:50}];
+function tour3(P){
+  var N=num, rd=function(v){ return Math.round(v*1e6)/1e6; }, E=function(v){ return eu(v); }, Ep=function(v){ return Number.isInteger(v)?N(v):E(v); };
+  var F=P.F, s=P.s, p=P.p, A=P.A, inc=P.inc, q=P.q, pn=P.pn, qn=P.qn;
+  var m=rd(p-s), x1=100, x0=200, GA=rd(m*A-F), S0=rd(F/x0+s), K0x=rd(F+s*x0), pS0=rd(p-S0), S100=rd(F/100+s), S70n=rd(F+70*s), d70=decPer(S70n,70);
+  var cx=function(c){ return c===1?"x":N(c)+"x"; };
+  var sI=rd(s*(1+inc/100)), Ka=rd(F+s*A), Kb=rd(F+sI*A), pI=rd((Kb-Ka)/Ka*100), fI=rd(1+inc/100);
+  var k2=rd(p*q/100-s), x2=rd(F/k2), e2=rd(p*q/100);
+  var sold0=rd(A*q/100), rev0=rd(sold0*p), pr0=rd(rev0-Ka), sold1=rd(A*qn/100), rev1=rd(sold1*pn), pr1=rd(rev1-Ka), lohnt=pr1>pr0, dpr=rd(Math.abs(pr1-pr0));
+  var ymax=Math.ceil(2*F/50)*50, ymin=-Math.ceil((F+10)/50)*50, bmax=Math.ceil(Kb*1.1/50)*50, bmax2=Math.ceil(Math.max(rev0,rev1,Ka)*1.1/100)*100;
+  var T3={
+  angabe:"<p>Die Redaktion der Schülerzeitung „Pausenblick“ lässt die Winterausgabe drucken. Die Druckerei verlangt "+amk("fix",N(F)+" € für das Einrichten der Maschine")+" und "+amk("stk",E(s)+" € pro gedrucktem Heft")+". Verkauft wird das Heft in der Pause um "+amk("vp",Ep(p)+" €")+".</p>"+
     "<p>Die "+amk("x","Auflage "+M("x")+" ist die Anzahl der gedruckten Hefte")+". "+amk("alle","In den Teilaufgaben a) bis e) wird angenommen, dass alle gedruckten Hefte verkauft werden")+".</p>",
   parts:[
-  {title:"Kosten und Gewinn",marks:["fix","stk","vp","alle"],note:M("K(x) = 120 + 0,8x")+" und "+M("G(x) = 1,2x - 120"),mk:function(){ return {
+  {title:"Kosten und Gewinn",marks:["fix","stk","vp","alle"],note:M("K(x) = "+N(F)+" + "+N(s)+"x")+" und "+M("G(x) = "+N(m)+"x - "+N(F)),mk:function(){ return {
     fmt:"input",help:false,q:"Gib je einen Term für die Druckkosten "+M("K(x)")+" und für den Gewinn "+M("G(x)")+" (jeweils in Euro) an. Der Gewinn ist das, was von den Einnahmen nach Abzug der Druckkosten bleibt. Schreib "+M("G(x)")+" ohne Klammern.",
-    fields:[{l:M("K(x) ="),kind:"term",r:"120 + 0,8x",w:"Einmal 120 €, dazu 0,80 € pro Heft."},{l:M("G(x) ="),kind:"term",r:"1,2x - 120",form:"sum",w:M("2x - (120 + 0,8x) = 2x - 120 - 0,8x")+"."}],
-    tips:["Die Einnahmen sind 2 € pro verkauftem Heft, also "+M("2x")+".","Beim Abziehen der Kosten dreht das Minus beide Vorzeichen in der Klammer um."],
+    fields:[{l:M("K(x) ="),kind:"term",r:N(F)+" + "+N(s)+"x",w:"Einmal "+N(F)+" €, dazu "+E(s)+" € pro Heft."},{l:M("G(x) ="),kind:"term",r:N(m)+"x - "+N(F),form:"sum",w:M(Ep(p)+"x - ("+N(F)+" + "+N(s)+"x) = "+Ep(p)+"x - "+N(F)+" - "+N(s)+"x")+"."}],
+    tips:["Die Einnahmen sind "+Ep(p)+" € pro verkauftem Heft, also "+M(cx(p))+".","Beim Abziehen der Kosten dreht das Minus beide Vorzeichen in der Klammer um."],
     sol:{merk:"Gewinn ist Einnahmen minus Kosten. Die Klammer um die Kosten sorgt dafür, dass alles abgezogen wird.",steps:[
-      {t:"Die Druckkosten: ein fester Betrag und ein Betrag pro Heft.",m:M("K(x) = 120 + 0,8x")},{t:"Die Einnahmen, wenn alle Hefte verkauft werden.",m:M("E(x) = 2x")},
-      {t:"Gewinn ist Einnahmen minus Kosten.",m:M("G(x) = 2x - (120 + 0,8x) = 2x [[- 120 - 0,8x]]")},{t:"Zusammenfassen.",m:M("G(x) = 1,2x - 120")}]} }; }},
-  {title:"Die Gewinnschwelle",marks:["fix","vp"],note:"Gewinnschwelle bei 100 Heften, "+M("G(250) = 180")+" €",mk:function(){ return {
-    fmt:"input",help:false,q:"Rechne mit "+M("G(x) = 1,2x - 120")+".",
-    fields:[{l:"Ab welcher Auflage macht die Redaktion keinen Verlust mehr? "+M("x ="),r:100,w:"1,2x = 120."},{l:M("G(250) ="),r:180,u:"€",w:"1,2 · 250 − 120."}],
-    tips:["Kein Verlust heißt: Der Gewinn ist mindestens 0.","Setz "+M("1,2x - 120 = 0")+" und löse nach "+M("x")+" auf."],
-    sol:{viz:vPlane([0,300],[-150,250],{W:600,H:400,xl:"x",yl:"G(x) in €",sx:50,sy:50}),merk:"Die Nullstelle der Gewinnfunktion ist die Gewinnschwelle. Links davon Verlust, rechts davon Gewinn.",steps:[
-      {t:"Der Graph von "+M("G")+" beginnt bei −120: Ohne ein verkauftes Heft bleiben die Einrichtungskosten als Verlust.",a:function(V){ V.L(1.2,-120,"--dx"); V.Pt(0,-120,"−120","--right",.7,{dx:10,dy:16}); }},
-      {t:"Gewinn 0 setzen.",m:M("1,2x - 120 = 0")+" &nbsp; also &nbsp; "+M("x = 100"),a:function(V){ V.Pt(100,0,"Gewinnschwelle","--rise",0,{dx:8,dy:22}); }},
-      {t:"Bei 250 Heften.",m:M("G(250) = 1,2 * 250 - 120 = 180"),a:function(V){ V.G(250,180); V.Pt(250,180,"(250 | 180)","--dy",.6,{dx:-10,anchor:"end"}); }}]} }; }},
+      {t:"Die Druckkosten: ein fester Betrag und ein Betrag pro Heft.",m:M("K(x) = "+N(F)+" + "+N(s)+"x")},{t:"Die Einnahmen, wenn alle Hefte verkauft werden.",m:M("E(x) = "+cx(p))},
+      {t:"Gewinn ist Einnahmen minus Kosten.",m:M("G(x) = "+cx(p)+" - ("+N(F)+" + "+N(s)+"x) = "+cx(p)+" [[- "+N(F)+" - "+N(s)+"x]]")},{t:"Zusammenfassen.",m:M("G(x) = "+N(m)+"x - "+N(F))}]} }; }},
+  {title:"Die Gewinnschwelle",marks:["fix","vp"],note:"Gewinnschwelle bei "+x1+" Heften, "+M("G("+A+") = "+N(GA))+" €",mk:function(){ return {
+    fmt:"input",help:false,q:"Rechne mit "+M("G(x) = "+N(m)+"x - "+N(F))+".",
+    fields:[{l:"Ab welcher Auflage macht die Redaktion keinen Verlust mehr? "+M("x ="),r:x1,w:N(m)+"x = "+N(F)+"."},{l:M("G("+A+") ="),r:GA,u:"€",w:N(m)+" · "+A+" − "+N(F)+"."}],
+    tips:["Kein Verlust heißt: Der Gewinn ist mindestens 0.","Setz "+M(N(m)+"x - "+N(F)+" = 0")+" und löse nach "+M("x")+" auf."],
+    sol:{viz:vPlane([0,300],[ymin,ymax],{W:600,H:400,xl:"x",yl:"G(x) in €",sx:50,sy:50}),merk:"Die Nullstelle der Gewinnfunktion ist die Gewinnschwelle. Links davon Verlust, rechts davon Gewinn.",steps:[
+      {t:"Der Graph von "+M("G")+" beginnt bei −"+N(F)+": Ohne ein verkauftes Heft bleiben die Einrichtungskosten als Verlust.",a:function(V){ V.L(m,-F,"--dx"); V.Pt(0,-F,"−"+N(F),"--right",.7,{dx:10,dy:16}); }},
+      {t:"Gewinn 0 setzen.",m:M(N(m)+"x - "+N(F)+" = 0")+" &nbsp; also &nbsp; "+M("x = "+x1),a:function(V){ V.Pt(x1,0,"Gewinnschwelle","--rise",0,{dx:8,dy:22}); }},
+      {t:"Bei "+A+" Heften.",m:M("G("+A+") = "+N(m)+" * "+A+" - "+N(F)+" = "+N(GA)),a:function(V){ V.G(A,GA); V.Pt(A,GA,"("+A+" | "+N(GA)+")","--dy",.6,{dx:-10,anchor:"end"}); }}]} }; }},
   {title:"Drei Punkte des Graphen",marks:["x"],mk:function(){ return {
-    fmt:"punkte",help:false,q:"Markiere die drei Punkte des Graphen von "+M("G")+", die zu den Auflagen 0, 100 und 200 gehören.",
-    W:560,H:440,xr:[0,300],yr:[-180,240],xl:"x",yl:"G(x) in €",sx:50,sy:60,snapX:50,snapY:60,pts:[[0,-120],[100,0],[200,120]],
-    tips:["Berechne "+M("G(0)")+", "+M("G(100)")+" und "+M("G(200)")+" mit "+M("G(x) = 1,2x - 120")+".","Ein negativer Funktionswert liegt unter der waagrechten Achse."],
-    sol:{viz:vPlane([0,300],[-180,240],{W:560,H:440,xl:"x",yl:"G(x) in €",sx:50,sy:60}),merk:"Je 100 Hefte mehr steigt der Gewinn um 120 €. Gleiche Schritte, gleiche Zunahme: Die Punkte liegen auf einer Geraden.",steps:[
-      {t:"Die drei Funktionswerte.",m:M("G(0) = -120")+" &nbsp; "+M("G(100) = 0")+" &nbsp; "+M("G(200) = 120"),a:function(V){ V.Pt(0,-120,"(0 | −120)","--dy",0,{dx:10,dy:16}); V.Pt(100,0,"(100 | 0)","--dy",.3,{dx:8,dy:22}); V.Pt(200,120,"(200 | 120)","--dy",.6,{dx:-10,anchor:"end"}); }},
-      {t:"Von Punkt zu Punkt: 100 nach rechts, 120 hinauf.",a:function(V){ V.T(0,-120,100,120,0,{nolab:1}); V.T(100,0,100,120,1.2,{nolab:1}); }},
-      {t:"Die Punkte liegen auf der Geraden mit der Steigung 1,2.",a:function(V){ V.L(1.2,-120,"--dx"); }}]} }; }},
+    fmt:"punkte",help:false,q:"Markiere die drei Punkte des Graphen von "+M("G")+", die zu den Auflagen 0, "+x1+" und "+x0+" gehören.",
+    W:560,H:440,xr:[0,300],yr:[-1.5*F,2*F],xl:"x",yl:"G(x) in €",sx:50,sy:F/2,snapX:50,snapY:F/2,pts:[[0,-F],[x1,0],[x0,F]],
+    tips:["Berechne "+M("G(0)")+", "+M("G("+x1+")")+" und "+M("G("+x0+")")+" mit "+M("G(x) = "+N(m)+"x - "+N(F))+".","Ein negativer Funktionswert liegt unter der waagrechten Achse."],
+    sol:{viz:vPlane([0,300],[-1.5*F,2*F],{W:560,H:440,xl:"x",yl:"G(x) in €",sx:50,sy:F/2}),merk:"Je "+x1+" Hefte mehr steigt der Gewinn um "+N(F)+" €. Gleiche Schritte, gleiche Zunahme: Die Punkte liegen auf einer Geraden.",steps:[
+      {t:"Die drei Funktionswerte.",m:M("G(0) = -"+N(F))+" &nbsp; "+M("G("+x1+") = 0")+" &nbsp; "+M("G("+x0+") = "+N(F)),a:function(V){ V.Pt(0,-F,"(0 | −"+N(F)+")","--dy",0,{dx:10,dy:16}); V.Pt(x1,0,"("+x1+" | 0)","--dy",.3,{dx:8,dy:22}); V.Pt(x0,F,"("+x0+" | "+N(F)+")","--dy",.6,{dx:-10,anchor:"end"}); }},
+      {t:"Von Punkt zu Punkt: "+x1+" nach rechts, "+N(F)+" hinauf.",a:function(V){ V.T(0,-F,x1,F,0,{nolab:1}); V.T(x1,0,x1,F,m,{nolab:1}); }},
+      {t:"Die Punkte liegen auf der Geraden mit der Steigung "+N(m)+".",a:function(V){ V.L(m,-F,"--dx"); }}]} }; }},
   {title:"Kosten pro Heft",marks:["fix","stk"],mk:function(){ return {
-    fmt:"mc",pick:1,help:false,q:M("S(x) = K(x) : x")+" sind die Druckkosten pro Heft, die Stückkosten. Es gilt "+M("S(200) = 1,40")+". Kreuze die zutreffende Deutung an.",
-    items:[{s:"Jedes weitere Heft kostet im Druck 1,40 €.",r:0,w:"Jedes weitere Heft kostet 0,80 €. Die 1,40 € enthalten auch den Anteil an den Einrichtungskosten."},
-      {s:"Bei einer Auflage von 200 Heften kostet der Druck pro Heft 1,40 €.",r:1,w:M("K(200) = 280")+", und 280 : 200 = 1,40."},
-      {s:"Die Stückkosten betragen bei jeder Auflage 1,40 €.",r:0,w:"Gegenbeispiel: "+M("S(100) = 2")+"."},
-      {s:"Der Druck von 200 Heften kostet insgesamt 1,40 €.",r:0,w:"Insgesamt kostet er 280 €."},
-      {s:"Bei 200 Heften bleiben pro Heft 1,40 € Gewinn.",r:0,w:"Pro Heft bleiben 2 € − 1,40 € = 0,60 €."}],
-    tips:["Rechne nach: Was kostet der Druck von 200 Heften insgesamt?","In der Klammer steht die Auflage. Der Funktionswert ist ein Betrag pro Heft."],
+    fmt:"mc",pick:1,help:false,q:M("S(x) = K(x) : x")+" sind die Druckkosten pro Heft, die Stückkosten. Es gilt "+M("S("+x0+") = "+num(S0,2))+". Kreuze die zutreffende Deutung an.",
+    items:[{s:"Jedes weitere Heft kostet im Druck "+num(S0,2)+" €.",r:0,w:"Jedes weitere Heft kostet "+E(s)+" €. Die "+num(S0,2)+" € enthalten auch den Anteil an den Einrichtungskosten."},
+      {s:"Bei einer Auflage von "+x0+" Heften kostet der Druck pro Heft "+num(S0,2)+" €.",r:1,w:M("K("+x0+") = "+N(K0x))+", und "+N(K0x)+" : "+x0+" = "+num(S0,2)+"."},
+      {s:"Die Stückkosten betragen bei jeder Auflage "+num(S0,2)+" €.",r:0,w:"Gegenbeispiel: "+M("S("+x1+") = "+N(S100))+"."},
+      {s:"Der Druck von "+x0+" Heften kostet insgesamt "+num(S0,2)+" €.",r:0,w:"Insgesamt kostet er "+N(K0x)+" €."},
+      {s:"Bei "+x0+" Heften bleiben pro Heft "+num(S0,2)+" € Gewinn.",r:0,w:"Pro Heft bleiben "+Ep(p)+" € − "+num(S0,2)+" € = "+num(pS0,2)+" €."}],
+    tips:["Rechne nach: Was kostet der Druck von "+x0+" Heften insgesamt?","In der Klammer steht die Auflage. Der Funktionswert ist ein Betrag pro Heft."],
     sol:{viz:vPlane([0,320],[0,3.5],{W:600,H:380,xl:"x",yl:"S(x) in €",sx:50,sy:.5}),merk:"Stückkosten sind Gesamtkosten durch Stückzahl. Sie sinken mit der Auflage, weil sich die festen Kosten auf mehr Hefte verteilen.",steps:[
-      {t:"Gesamtkosten für 200 Hefte, geteilt durch 200.",m:M("S(200) = {120 + 0,8 * 200/200} = {280/200} = 1,40"),a:function(V){ V.Pt(200,1.4,"(200 | 1,40)","--dy"); }},
-      {t:"Bei 100 Heften sind es 2 € pro Heft.",m:M("S(100) = {200/100} = 2"),a:function(V){ V.Pt(100,2,"(100 | 2)","--dy",0,{dx:10,dy:-10}); }},
-      {t:"Mit dem Regler veränderst du die Auflage. Die Stückkosten nähern sich 0,80 €, erreichen sie aber nie.",
-       ctl:{label:"Auflage "+M("x"),min:40,max:300,step:20,val:300,on:function(V,x){ V.F(function(t){ return t<38?NaN:120/t+.8; },"--dx",0,{from:38,to:x}); V.Sg(0,.8,320,.8,"--ink-3",0,{dash:"5 5",w:1.5}); V.Pt(x,120/x+.8,"S("+x+") = "+num(120/x+.8,2)+" €","--rise",0,{dx:-10,dy:-12,anchor:"end"}); }}}]} }; }},
-  {title:"Welche Art von Zahl?",marks:["x"],mk:function(){ var g1=shGap(["eine natürliche Zahl","eine rationale Zahl","eine irrationale Zahl"],1), g2=shGap(["sich Zähler und Nenner so erweitern lassen, dass ein Bruch ganzer Zahlen entsteht","die Division für jede Auflage aufgeht","0,8 keine ganze Zahl ist"],0);
-    g1.w="Zum Beispiel "+M("S(70) = 2,5"+per("142857"))+": periodisch, also rational, aber keine natürliche Zahl."; g2.w="Mit 10 erweitert: "+M("{1200 + 8x/10x}")+". Für jede natürliche Zahl "+M("x")+" stehen oben und unten ganze Zahlen.";
+      {t:"Gesamtkosten für "+x0+" Hefte, geteilt durch "+x0+".",m:M("S("+x0+") = {"+N(F)+" + "+N(s)+" * "+x0+"/"+x0+"} = {"+N(K0x)+"/"+x0+"} = "+num(S0,2)),a:function(V){ V.Pt(x0,S0,"("+x0+" | "+num(S0,2)+")","--dy"); }},
+      {t:"Bei "+x1+" Heften sind es "+N(S100)+" € pro Heft.",m:M("S("+x1+") = {"+N(F+s*x1)+"/"+x1+"} = "+N(S100)),a:function(V){ V.Pt(x1,S100,"("+x1+" | "+N(S100)+")","--dy",0,{dx:10,dy:-10}); }},
+      {t:"Mit dem Regler veränderst du die Auflage. Die Stückkosten nähern sich "+E(s)+" €, erreichen sie aber nie.",
+       ctl:{label:"Auflage "+M("x"),min:40,max:300,step:20,val:300,on:function(V,x){ V.F(function(t){ return t<38?NaN:F/t+s; },"--dx",0,{from:38,to:x}); V.Sg(0,s,320,s,"--ink-3",0,{dash:"5 5",w:1.5}); V.Pt(x,F/x+s,"S("+x+") = "+num(F/x+s,2)+" €","--rise",0,{dx:-10,dy:-12,anchor:"end"}); }}}]} }; }},
+  {title:"Welche Art von Zahl?",marks:["x"],mk:function(){ var g1=shGap(["eine natürliche Zahl","eine rationale Zahl","eine irrationale Zahl"],1), g2=shGap(["sich Zähler und Nenner so erweitern lassen, dass ein Bruch ganzer Zahlen entsteht","die Division für jede Auflage aufgeht",E(s)+" keine ganze Zahl ist"],0);
+    g1.w="Zum Beispiel "+M("S(70) = "+d70.str)+": periodisch, also rational, aber keine natürliche Zahl."; g2.w="Mit 10 erweitert: "+M("{"+N(F*10)+" + "+N(rd(s*10))+"x/10x}")+". Für jede natürliche Zahl "+M("x")+" stehen oben und unten ganze Zahlen.";
     return { fmt:"luecke",help:helpTeilen(),q:"Die Auflage "+M("x")+" ist eine natürliche Zahl größer als 0. Ergänze den Satz so, dass eine richtige Aussage mit richtiger Begründung entsteht.",
-    satz:"Für jede Auflage "+M("x")+" sind die Stückkosten "+M("S(x) = {120 + 0,8x/x}")+" ___, weil ___.",gaps:[g1,g2],
-    tips:["Probier zwei Auflagen: "+M("x = 200")+" und "+M("x = 70")+".","Erweitere den Bruch mit 10. Was steht dann im Zähler und im Nenner?"],
+    satz:"Für jede Auflage "+M("x")+" sind die Stückkosten "+M("S(x) = {"+N(F)+" + "+N(s)+"x/x}")+" ___, weil ___.",gaps:[g1,g2],
+    tips:["Probier zwei Auflagen: "+M("x = "+x0)+" und "+M("x = 70")+".","Erweitere den Bruch mit 10. Was steht dann im Zähler und im Nenner?"],
     sol:{viz:vSets(),merk:"Rational heißt: als Bruch ganzer Zahlen schreibbar. Dazu gehören abbrechende und periodische Dezimalzahlen.",steps:[
-      {t:"Zwei Beispiele.",m:M("S(200) = 1,4")+" &nbsp; und &nbsp; "+M("S(70) = {176/70} = 2,5"+per("142857")),a:function(V){ V.drop("1,4","Q"); V.drop("176/70","Q",.3); }},
-      {t:"Allgemein: mit 10 erweitern.",m:M("{120 + 0,8x/x} = {1200 + 8x/10x}")},
+      {t:"Zwei Beispiele.",m:M("S("+x0+") = "+N(S0))+" &nbsp; und &nbsp; "+M("S(70) = {"+N(S70n)+"/70} = "+d70.str),a:function(V){ V.drop(N(S0),"Q"); V.drop(N(S70n)+"/70","Q",.3); }},
+      {t:"Allgemein: mit 10 erweitern.",m:M("{"+N(F)+" + "+N(s)+"x/x} = {"+N(F*10)+" + "+N(rd(s*10))+"x/10x}")},
       "Für jede natürliche Zahl "+M("x")+" sind Zähler und Nenner ganze Zahlen. Der Quotient ist also immer rational, auch wenn die Division nicht aufgeht."]} }; }},
   {title:"Die Druckerei wird teurer",marks:["stk","fix"],mk:function(){ return {
-    fmt:"input",help:false,q:"Die Druckerei erhöht den Preis pro Heft um 15 %. Die 120 € für das Einrichten bleiben gleich. Die Redaktion plant eine Auflage von 250 Heften.",
-    fields:[{l:"Neuer Preis pro Heft:",r:.92,u:"€",w:"0,80 · 1,15."},{l:"Neue Druckkosten für 250 Hefte:",r:350,u:"€",w:"120 + 250 · 0,92."},{l:"Um wie viel Prozent steigen die Druckkosten für 250 Hefte insgesamt?",r:9.375,tol:.03,u:"%",w:"30 € Mehrkosten, bezogen auf 320 €."}],
-    tips:["Nur ein Teil der Kosten wird teurer.","Vorher kostete der Druck 120 + 250 · 0,80 = 320 €. Der Anstieg wird auf diese 320 € bezogen."],
-    sol:{viz:vBars(400,2),merk:"Steigt nur ein Teil der Kosten um 15 %, steigen die Gesamtkosten um weniger als 15 %.",steps:[
-      {t:"Der neue Preis pro Heft.",m:M("0,80 * 1,15 = 0,92")},
-      {t:"Alte und neue Druckkosten für 250 Hefte.",m:M("120 + 250 * 0,80 = 320")+" &nbsp; und &nbsp; "+M("120 + 250 * 0,92 = 350"),a:function(V){ V.bar(0,"bisher",320,"320 €","--ink-3"); V.bar(1,"neu",350,"350 €","--dx",.5); }},
-      {t:"Die Mehrkosten im Verhältnis zu den bisherigen Kosten.",m:M("{350 - 320/320} = {30/320} = 0,09375")+" &rarr; 9,375 %"}]} }; }},
-  {title:"Nicht alle Hefte werden verkauft",marks:["alle","vp","stk"],note:"Bei 80 % Verkauf: "+M("G_2(x) = 0,8x - 120")+", Gewinnschwelle bei 150 Heften",mk:function(){ return {
-    fmt:"input",help:false,q:"Ab jetzt wird realistischer gerechnet, wieder mit dem alten Druckpreis von 0,80 € pro Heft: Erfahrungsgemäß werden nur 80 % der gedruckten Hefte verkauft.",
-    fields:[{l:"Gewinn bei der Auflage "+M("x")+", ohne Klammern: "+M("G_2(x) ="),kind:"term",r:"0,8x - 120",form:"sum",w:M("2 * 0,8x - (120 + 0,8x)")+"."},{l:"Auflage, ab der kein Verlust mehr entsteht: "+M("x ="),r:150,w:"0,8x = 120."}],
-    tips:["Verkauft werden "+M("0,8x")+" Hefte zu je 2 €. Gedruckt und bezahlt werden trotzdem alle "+M("x")+".","Einnahmen "+M("1,6x")+", Kosten "+M("120 + 0,8x")+"."],
-    sol:{viz:vPlane([0,300],[-150,250],{W:600,H:400,xl:"x",yl:"Gewinn in €",sx:50,sy:50}),merk:"Die Kosten hängen von den gedruckten Heften ab, die Einnahmen von den verkauften. Sinkt der Anteil der verkauften Hefte, wandert die Gewinnschwelle nach rechts.",steps:[
-      {t:"Einnahmen: 80 % der Hefte zu je 2 €.",m:M("2 * 0,8x = 1,6x")},
-      {t:"Davon die Druckkosten für alle Hefte abziehen.",m:M("G_2(x) = 1,6x - (120 + 0,8x) = 0,8x - 120"),a:function(V){ V.L(1.2,-120,"--ink-3",0,"6 5"); V.L(.8,-120,"--dx",.4); }},
-      {t:"Gewinnschwelle.",m:M("0,8x - 120 = 0")+" &nbsp; also &nbsp; "+M("x = 150"),a:function(V){ V.Pt(100,0,"","--ink-3",0,{hollow:1}); V.Pt(150,0,"150","--rise",.3,{dx:6,dy:22}); }},
+    fmt:"input",help:false,q:"Die Druckerei erhöht den Preis pro Heft um "+inc+" %. Die "+N(F)+" € für das Einrichten bleiben gleich. Die Redaktion plant eine Auflage von "+A+" Heften.",
+    fields:[{l:"Neuer Preis pro Heft:",r:sI,u:"€",w:E(s)+" · "+N(fI)+"."},{l:"Neue Druckkosten für "+A+" Hefte:",r:Kb,u:"€",w:N(F)+" + "+A+" · "+E(sI)+"."},{l:"Um wie viel Prozent steigen die Druckkosten für "+A+" Hefte insgesamt?",r:pI,tol:.03,u:"%",w:N(rd(Kb-Ka))+" € Mehrkosten, bezogen auf "+N(Ka)+" €."}],
+    tips:["Nur ein Teil der Kosten wird teurer.","Vorher kostete der Druck "+N(F)+" + "+A+" · "+E(s)+" = "+N(Ka)+" €. Der Anstieg wird auf diese "+N(Ka)+" € bezogen."],
+    sol:{viz:vBars(bmax,2),merk:"Steigt nur ein Teil der Kosten um "+inc+" %, steigen die Gesamtkosten um weniger als "+inc+" %.",steps:[
+      {t:"Der neue Preis pro Heft.",m:M(E(s)+" * "+N(fI)+" = "+E(sI))},
+      {t:"Alte und neue Druckkosten für "+A+" Hefte.",m:M(N(F)+" + "+A+" * "+E(s)+" = "+N(Ka))+" &nbsp; und &nbsp; "+M(N(F)+" + "+A+" * "+E(sI)+" = "+N(Kb)),a:function(V){ V.bar(0,"bisher",Ka,N(Ka)+" €","--ink-3"); V.bar(1,"neu",Kb,N(Kb)+" €","--dx",.5); }},
+      {t:"Die Mehrkosten im Verhältnis zu den bisherigen Kosten.",m:M("{"+N(Kb)+" - "+N(Ka)+"/"+N(Ka)+"} = {"+N(rd(Kb-Ka))+"/"+N(Ka)+"} = "+N(Math.round(pI/100*1e5)/1e5))+" &rarr; "+N(Math.round(pI*1e3)/1e3)+" %"}]} }; }},
+  {title:"Nicht alle Hefte werden verkauft",marks:["alle","vp","stk"],note:"Bei "+q+" % Verkauf: "+M("G_2(x) = "+cx(k2)+" - "+N(F))+", Gewinnschwelle bei "+N(x2)+" Heften",mk:function(){ return {
+    fmt:"input",help:false,q:"Ab jetzt wird realistischer gerechnet, wieder mit dem alten Druckpreis von "+E(s)+" € pro Heft: Erfahrungsgemäß werden nur "+q+" % der gedruckten Hefte verkauft.",
+    fields:[{l:"Gewinn bei der Auflage "+M("x")+", ohne Klammern: "+M("G_2(x) ="),kind:"term",r:cx(k2)+" - "+N(F),form:"sum",w:M(Ep(p)+" * "+N(q/100)+"x - ("+N(F)+" + "+N(s)+"x)")+"."},{l:"Auflage, ab der kein Verlust mehr entsteht: "+M("x ="),r:x2,w:M(cx(k2)+" = "+N(F))+"."}],
+    tips:["Verkauft werden "+M(cx(q/100))+" Hefte zu je "+Ep(p)+" €. Gedruckt und bezahlt werden trotzdem alle "+M("x")+".","Einnahmen "+M(cx(e2))+", Kosten "+M(N(F)+" + "+N(s)+"x")+"."],
+    sol:{viz:vPlane([0,300],[ymin,ymax],{W:600,H:400,xl:"x",yl:"Gewinn in €",sx:50,sy:50}),merk:"Die Kosten hängen von den gedruckten Heften ab, die Einnahmen von den verkauften. Sinkt der Anteil der verkauften Hefte, wandert die Gewinnschwelle nach rechts.",steps:[
+      {t:"Einnahmen: "+q+" % der Hefte zu je "+Ep(p)+" €.",m:M(Ep(p)+" * "+N(q/100)+"x = "+cx(e2))},
+      {t:"Davon die Druckkosten für alle Hefte abziehen.",m:M("G_2(x) = "+cx(e2)+" - ("+N(F)+" + "+N(s)+"x) = "+cx(k2)+" - "+N(F)),a:function(V){ V.L(m,-F,"--ink-3",0,"6 5"); V.L(k2,-F,"--dx",.4); }},
+      {t:"Gewinnschwelle.",m:M(cx(k2)+" - "+N(F)+" = 0")+" &nbsp; also &nbsp; "+M("x = "+N(x2)),a:function(V){ V.Pt(x1,0,"","--ink-3",0,{hollow:1}); V.Pt(x2,0,N(x2),"--rise",.3,{dx:6,dy:22}); }},
       {t:"Mit dem Regler veränderst du den Anteil der verkauften Hefte. Beobachte die Gewinnschwelle.",
-       ctl:{label:"verkaufter Anteil",min:50,max:100,step:5,val:80,fmt:function(v){ return v+" %"; },on:function(V,q){ var k=2*q/100-.8, z=120/k; V.L(k,-120,"--dx",0); if(z<=300) V.Pt(z,0,"Gewinnschwelle "+num(Math.round(z)),"--rise",0,{dx:8,dy:22}); else V.Tx(150,200,"Gewinnschwelle erst bei "+num(Math.round(z))+" Heften","--fall",0,{anchor:"middle"}); }}}]} }; }},
+       ctl:{label:"verkaufter Anteil",min:50,max:100,step:5,val:q,fmt:function(v){ return v+" %"; },on:function(V,qq){ var k=p*qq/100-s, z=F/k; V.L(k,-F,"--dx",0); if(z<=300) V.Pt(z,0,"Gewinnschwelle "+num(Math.round(z)),"--rise",0,{dx:8,dy:22}); else V.Tx(150,ymax*.8,"Gewinnschwelle erst bei "+num(Math.round(z))+" Heften","--fall",0,{anchor:"middle"}); }}}]} }; }},
   {title:"Lohnt sich ein höherer Preis?",marks:["vp"],mk:function(){ return {
-    fmt:"offen",help:false,q:"Die Redaktion überlegt, das Heft um 2,50 € statt um 2 € zu verkaufen. Sie rechnet damit, dass dann nur noch 70 % statt 80 % der Hefte verkauft werden. Die Auflage bleibt bei 250 Heften, der Druckpreis bei 0,80 € pro Heft. Entscheide rechnerisch, ob sich die Preiserhöhung lohnt.",
-    model:"Druckkosten in beiden Fällen: 120 + 250 · 0,80 = 320 €.<br>Bisher: 80 % von 250 sind 200 Hefte, Einnahmen 200 · 2 = 400 €, Gewinn 80 €.<br>Neu: 70 % von 250 sind 175 Hefte, Einnahmen 175 · 2,50 = 437,50 €, Gewinn 117,50 €.<br>Die Preiserhöhung lohnt sich: Der Gewinn steigt um 37,50 €, obwohl weniger Hefte verkauft werden.",
-    points:["Der Gewinn bisher ist berechnet: 80 €.","Der Gewinn mit dem neuen Preis ist berechnet: 117,50 €.","Die Entscheidung steht da und ist mit den beiden Gewinnen begründet."],
+    fmt:"offen",help:false,q:"Die Redaktion überlegt, das Heft um "+E(pn)+" € statt um "+Ep(p)+" € zu verkaufen. Sie rechnet damit, dass dann nur noch "+qn+" % statt "+q+" % der Hefte verkauft werden. Die Auflage bleibt bei "+A+" Heften, der Druckpreis bei "+E(s)+" € pro Heft. Entscheide rechnerisch, ob sich die Preiserhöhung lohnt.",
+    model:"Druckkosten in beiden Fällen: "+N(F)+" + "+A+" · "+E(s)+" = "+E(Ka)+" €.<br>Bisher: "+q+" % von "+A+" sind "+N(sold0)+" Hefte, Einnahmen "+N(sold0)+" · "+Ep(p)+" = "+E(rev0)+" €, Gewinn "+E(pr0)+" €.<br>Neu: "+qn+" % von "+A+" sind "+N(sold1)+" Hefte, Einnahmen "+N(sold1)+" · "+E(pn)+" = "+E(rev1)+" €, Gewinn "+E(pr1)+" €.<br>"+
+      (lohnt?"Die Preiserhöhung lohnt sich: Der Gewinn steigt um "+E(dpr)+" €, obwohl weniger Hefte verkauft werden.":"Die Preiserhöhung lohnt sich nicht: Der Gewinn sinkt um "+E(dpr)+" €, weil zu wenige Hefte verkauft werden."),
+    points:["Der Gewinn bisher ist berechnet: "+E(pr0)+" €.","Der Gewinn mit dem neuen Preis ist berechnet: "+E(pr1)+" €.","Die Entscheidung steht da und ist mit den beiden Gewinnen begründet."],
     tips:["Rechne beide Fälle getrennt durch: verkaufte Hefte, Einnahmen, Gewinn.","Die Druckkosten sind in beiden Fällen gleich, weil die Auflage gleich bleibt."],
-    sol:{viz:vBars(500,3),merk:"Zwei Varianten vergleichen heißt: für beide dieselbe Größe ausrechnen und dann erst entscheiden. Mehr Preis bei weniger Absatz kann sich lohnen, muss aber nicht.",steps:[
-      {t:"Die Druckkosten sind in beiden Fällen 320 €.",m:M("120 + 250 * 0,80 = 320"),a:function(V){ V.bar(0,"Druckkosten",320,"320 €","--ink-3"); }},
-      {t:"Bisher: 200 verkaufte Hefte zu 2 €.",m:M("200 * 2 - 320 = 80"),a:function(V){ V.bar(1,"Einnahmen bisher",400,"400 €","--dx"); }},
-      {t:"Neu: 175 verkaufte Hefte zu 2,50 €.",m:M("175 * 2,50 - 320 = 117,50"),a:function(V){ V.bar(2,"Einnahmen neu",437.5,"437,50 €","--right"); V.ref(320,"",.5); }},
-      "Der Gewinn steigt um 37,50 €. Die Preiserhöhung lohnt sich unter diesen Annahmen."]} }; }}
-  ]});
+    sol:{viz:vBars(bmax2,3),merk:"Zwei Varianten vergleichen heißt: für beide dieselbe Größe ausrechnen und dann erst entscheiden. Mehr Preis bei weniger Absatz kann sich lohnen, muss aber nicht.",steps:[
+      {t:"Die Druckkosten sind in beiden Fällen "+E(Ka)+" €.",m:M(N(F)+" + "+A+" * "+E(s)+" = "+E(Ka)),a:function(V){ V.bar(0,"Druckkosten",Ka,E(Ka)+" €","--ink-3"); }},
+      {t:"Bisher: "+N(sold0)+" verkaufte Hefte zu "+Ep(p)+" €.",m:M(N(sold0)+" * "+Ep(p)+" - "+E(Ka)+" = "+E(pr0)),a:function(V){ V.bar(1,"Einnahmen bisher",rev0,E(rev0)+" €","--dx"); }},
+      {t:"Neu: "+N(sold1)+" verkaufte Hefte zu "+E(pn)+" €.",m:M(N(sold1)+" * "+E(pn)+" - "+E(Ka)+" = "+E(pr1)),a:function(V){ V.bar(2,"Einnahmen neu",rev1,E(rev1)+" €","--right"); V.ref(Ka,"",.5); }},
+      lohnt?"Der Gewinn steigt um "+E(dpr)+" €. Die Preiserhöhung lohnt sich unter diesen Annahmen.":"Der Gewinn sinkt um "+E(dpr)+" €. Die Preiserhöhung lohnt sich unter diesen Annahmen nicht."]} }; }}
+  ]};
+  return T3;
+}
+(function(){
+  var I=tour3(ZEI_PRE[0]);
+  TOURS.push({id:"g3",title:"Schülerzeitung „Pausenblick“",sub:"Druckkosten, Gewinnschwelle und ein Preisexperiment",angabe:I.angabe,parts:I.parts,vary:function(){ return tour3(pick(ZEI_PRE)); }});
+})();
 
 /* ---------- Tour 4 · Schulbuffet: Mengen, Venn-Diagramme und Intervalle, verbunden mit Prozent und Termen ---------- */
-var BUF={"111":18,"110":12,"101":28,"011":6,"100":74,"010":34,"001":52,"000":16}, BUFN=["W","O","G"];
-TOURS.push({id:"g4",title:"Das Schulbuffet",sub:"Eine Umfrage, ein Venn-Diagramm und ein Rabatt",
+/* P = {c:{"111":…,"000":…}, pw, pg, pk, k1, k2}: Felder des Diagramms, Preise für Weckerl, Getränk und Kombi, Spanne der Kombi-Verkäufe.
+   Bedingung für Teil i): Einzelfeld W < ein Drittel < ganzer Kreis W, damit die Zeitungsaussage falsch ist. */
+var BUFN=["W","O","G"];
+var BUF_PRE=[
+  {c:{"111":18,"110":12,"101":28,"011":6,"100":74,"010":34,"001":52,"000":16},pw:2.4,pg:1.5,pk:3.5,k1:60,k2:80},
+  {c:{"111":10,"110":14,"101":20,"011":8,"100":50,"010":30,"001":44,"000":25},pw:2.2,pg:1.6,pk:3.4,k1:50,k2:70},
+  {c:{"111":20,"110":15,"101":30,"011":10,"100":85,"010":45,"001":70,"000":25},pw:2.6,pg:1.4,pk:3.6,k1:70,k2:90},
+  {c:{"111":12,"110":8,"101":16,"011":10,"100":34,"010":26,"001":44,"000":30},pw:2,pg:1.8,pk:3.4,k1:40,k2:60}];
+function tour4(P){
+  var N=num, rd=function(v){ return Math.round(v*1e6)/1e6; }, c=P.c, E=function(v){ return eu(v); };
+  var k111=c["111"], k110=c["110"], k101=c["101"], k011=c["011"], k100=c["100"], k010=c["010"], k001=c["001"], k000=c["000"];
+  var n=k111+k110+k101+k011+k100+k010+k001+k000, W=k100+k110+k101+k111, O=k010+k110+k011+k111, G=k001+k101+k011+k111;
+  var WO=k110+k111, WG=k101+k111, OG=k011+k111, inside=n-k000, pm=Math.round(inside/n*1000)/10, po=Math.round(k010/n*1000)/10, pr=Math.round(pm), WuG=W+G-WG, WdG=k100+k110;
+  var pw=P.pw, pg=P.pg, pk=P.pk, sum=rd(pw+pg), save=rd(sum-pk), sp=Math.round(save/sum*10000)/100, k1=P.k1, k2=P.k2, e1=rd(k1*pk), e2=rd(k2*pk), third=rd(n/3);
+  var ivlo=Math.floor(e1/10)*10-10, ivhi=Math.ceil(e2/10)*10+10;
+  var T4={
   lead:"Eine zusammenhängende Aufgabe zu Mengen, Venn-Diagrammen und Intervallen, verbunden mit Prozentrechnung und Termen. Die nächste Teilaufgabe öffnet sich, sobald die vorige gelöst oder ihr Lösungsweg angesehen ist. Tippst du in eine Teilaufgabe, leuchten in der Angabe die Stellen auf, die du dafür brauchst.",
-  angabe:"<p>Die Schülervertretung befragt "+amk("n","alle 240 Schülerinnen und Schüler")+" der Schule, was sie in der großen Pause am Buffet kaufen: ein Weckerl ("+M("W")+"), Obst ("+M("O")+") oder ein Getränk ("+M("G")+"). Mehrfachnennungen sind möglich.</p>"+
-    "<p>"+amk("drei","18 kaufen alle drei Dinge")+". "+amk("zwei","46 kaufen ein Weckerl und ein Getränk, 30 ein Weckerl und Obst, 24 Obst und ein Getränk")+"; "+amk("zwei","darin sind jeweils die 18 enthalten, die alles kaufen")+". "+
-    amk("ges","Insgesamt kaufen 132 ein Weckerl, 70 Obst und 104 ein Getränk")+".</p>"+
-    "<p>"+amk("preis","Ein Weckerl kostet 2,40 €, ein Getränk 1,50 €")+".</p>",
+  angabe:"<p>Die Schülervertretung befragt "+amk("n","alle "+N(n)+" Schülerinnen und Schüler")+" der Schule, was sie in der großen Pause am Buffet kaufen: ein Weckerl ("+M("W")+"), Obst ("+M("O")+") oder ein Getränk ("+M("G")+"). Mehrfachnennungen sind möglich.</p>"+
+    "<p>"+amk("drei",N(k111)+" kaufen alle drei Dinge")+". "+amk("zwei",N(WG)+" kaufen ein Weckerl und ein Getränk, "+N(WO)+" ein Weckerl und Obst, "+N(OG)+" Obst und ein Getränk")+"; "+amk("zwei","darin sind jeweils die "+N(k111)+" enthalten, die alles kaufen")+". "+
+    amk("ges","Insgesamt kaufen "+N(W)+" ein Weckerl, "+N(O)+" Obst und "+N(G)+" ein Getränk")+".</p>"+
+    "<p>"+amk("preis","Ein Weckerl kostet "+E(pw)+" €, ein Getränk "+E(pg)+" €")+".</p>",
   parts:[
-  {title:"Das Diagramm füllen",marks:["n","drei","zwei","ges"],note:"Diagramm: Mitte 18, Zweierfelder 12 (W, O), 28 (W, G), 6 (O, G), nur W 74, nur O 34, nur G 52, außen 16",mk:function(){ return {
+  {title:"Das Diagramm füllen",marks:["n","drei","zwei","ges"],note:"Diagramm: Mitte "+k111+", Zweierfelder "+k110+" (W, O), "+k101+" (W, G), "+k011+" (O, G), nur W "+k100+", nur O "+k010+", nur G "+k001+", außen "+k000,mk:function(){ return {
     fmt:"vfill",n:3,names:BUFN,q:"Vervollständige das Venn-Diagramm mit den Anzahlen aus der Umfrage.",
-    fields:[{k:"111",fix:18},{k:"110",r:12,hint:"30 − 18."},{k:"101",r:28,hint:"46 − 18."},{k:"011",r:6,hint:"24 − 18."},{k:"100",r:74,hint:"132 − (12 + 28 + 18)."},
-      {k:"010",r:34,hint:"70 − (12 + 6 + 18)."},{k:"001",r:52,hint:"104 − (28 + 6 + 18)."},{k:"000",r:16,hint:"240 − 224."}],
-    tips:["Von innen nach außen: Mitte, Zweierfelder, Einzelfelder, außen.","„46 kaufen ein Weckerl und ein Getränk“ enthält die 18 aus der Mitte."],
-    sol:{viz:vVenn(3,BUFN),merk:"Mitte → Zweierfelder → Einzelfelder → außen. Probe: Alle Felder ergeben 240.",steps:[
-      {t:"Die Mitte.",a:function(V){ V.put("111","18","--rise"); }},
-      {t:"Die Zweierfelder: jeweils 18 abziehen.",m:M("30 - 18 = 12")+", "+M("46 - 18 = 28")+", "+M("24 - 18 = 6"),a:function(V){ V.put("110","12","--dx"); V.put("101","28","--dx",.2); V.put("011","6","--dx",.4); }},
-      {t:"Die Einzelfelder: Gesamtzahl minus das, was im Kreis schon steht.",m:M("132 - 58 = 74")+", "+M("70 - 36 = 34")+", "+M("104 - 52 = 52"),a:function(V){ V.put("100","74","--dy"); V.put("010","34","--dy",.2); V.put("001","52","--dy",.4); }},
-      {t:"Außen: In den Kreisen sind 224, also kaufen 16 gar nichts.",m:M("240 - 224 = 16"),a:function(V){ V.put("000","16","--ink-2"); }}]} }; }},
-  {title:"Getränk ohne Weckerl",marks:["preis"],note:SR("G \\ W")+": 6 + 52 = 58 Personen",mk:function(){ return {
+    fields:[{k:"111",fix:k111},{k:"110",r:k110,hint:WO+" − "+k111+"."},{k:"101",r:k101,hint:WG+" − "+k111+"."},{k:"011",r:k011,hint:OG+" − "+k111+"."},{k:"100",r:k100,hint:W+" − ("+k110+" + "+k101+" + "+k111+")."},
+      {k:"010",r:k010,hint:O+" − ("+k110+" + "+k011+" + "+k111+")."},{k:"001",r:k001,hint:G+" − ("+k101+" + "+k011+" + "+k111+")."},{k:"000",r:k000,hint:n+" − "+inside+"."}],
+    tips:["Von innen nach außen: Mitte, Zweierfelder, Einzelfelder, außen.","„"+WG+" kaufen ein Weckerl und ein Getränk“ enthält die "+k111+" aus der Mitte."],
+    sol:{viz:vVenn(3,BUFN),merk:"Mitte → Zweierfelder → Einzelfelder → außen. Probe: Alle Felder ergeben "+n+".",steps:[
+      {t:"Die Mitte.",a:function(V){ V.put("111",String(k111),"--rise"); }},
+      {t:"Die Zweierfelder: jeweils "+k111+" abziehen.",m:M(WO+" - "+k111+" = "+k110)+", "+M(WG+" - "+k111+" = "+k101)+", "+M(OG+" - "+k111+" = "+k011),a:function(V){ V.put("110",String(k110),"--dx"); V.put("101",String(k101),"--dx",.2); V.put("011",String(k011),"--dx",.4); }},
+      {t:"Die Einzelfelder: Gesamtzahl minus das, was im Kreis schon steht.",m:M(W+" - "+(k110+k101+k111)+" = "+k100)+", "+M(O+" - "+(k110+k011+k111)+" = "+k010)+", "+M(G+" - "+(k101+k011+k111)+" = "+k001),a:function(V){ V.put("100",String(k100),"--dy"); V.put("010",String(k010),"--dy",.2); V.put("001",String(k001),"--dy",.4); }},
+      {t:"Außen: In den Kreisen sind "+inside+", also kaufen "+k000+" gar nichts.",m:M(n+" - "+inside+" = "+k000),a:function(V){ V.put("000",String(k000),"--ink-2"); }}]} }; }},
+  {title:"Getränk ohne Weckerl",marks:["preis"],note:SR("G \\ W")+": "+k011+" + "+k001+" = "+(k011+k001)+" Personen",mk:function(){ return {
     fmt:"venn",n:3,names:BUFN,r:"G \\ W",q:"Markiere die Menge derer, die ein Getränk, aber kein Weckerl kaufen. Ob sie Obst kaufen, spielt keine Rolle.",
     tips:["Zuerst der ganze Kreis "+M("G")+".","Davon fällt alles weg, was in "+M("W")+" liegt. Es bleiben zwei Felder."],
-    sol:{viz:vNumsSol(3,BUFN,BUF),merk:"„aber kein“ ist eine Differenz. Ohne Angabe zum dritten Merkmal bleiben beide Felder.",steps:[
+    sol:{viz:vNumsSol(3,BUFN,c),merk:"„aber kein“ ist eine Differenz. Ohne Angabe zum dritten Merkmal bleiben beide Felder.",steps:[
       {t:"Der Kreis "+M("G")+".",a:function(V){ V.reset(); V.sh("G","--dx",.28); }},
-      {t:"Ohne "+M("W")+" bleiben zwei Felder: mit und ohne Obst.",m:SR("G \\ W")+": 6 + 52 = 58",a:function(V){ V.reset(); V.sh("G \\ W","--rise",.4); }}]} }; }},
-  {title:"In Prozent",marks:["n"],note:"Mindestens eines: 224 von 240, rund 93,3 %; nur Obst: 34, rund 14,2 %",mk:function(){ return {
+      {t:"Ohne "+M("W")+" bleiben zwei Felder: mit und ohne Obst.",m:SR("G \\ W")+": "+k011+" + "+k001+" = "+(k011+k001),a:function(V){ V.reset(); V.sh("G \\ W","--rise",.4); }}]} }; }},
+  {title:"In Prozent",marks:["n"],note:"Mindestens eines: "+inside+" von "+n+", rund "+N(pm)+" %; nur Obst: "+k010+", rund "+N(po)+" %",mk:function(){ return {
     fmt:"input",help:helpStreifen("eins"),q:"Gib die Anteile in Prozent an, auf eine Nachkommastelle gerundet.",
-    fields:[{l:"Anteil derer, die mindestens eines der drei Dinge kaufen:",r:93.3,tol:.051,u:"%",w:"224 : 240 = 0,9333…"},{l:"Anteil derer, die ausschließlich Obst kaufen:",r:14.2,tol:.051,u:"%",w:"34 : 240 = 0,14166…"}],
-    tips:["Mindestens eines: alle Felder in den Kreisen, also 240 − 16.","Ausschließlich Obst ist ein einziges Feld."],
-    sol:{viz:vBars(240,2),merk:"Anteil = Teil : Ganzes. Das Ganze sind hier alle 240 Befragten.",steps:[
-      {t:"Mindestens eines.",m:M("{224/240} = 0,9333 ≈ 93,3 %"),a:function(V){ V.bar(0,"alle",240,"240 = 100 %","--ink-3"); V.bar(1,"mind. eines",224,"224 ≈ 93,3 %","--dx",.4); }},
-      {t:"Ausschließlich Obst.",m:M("{34/240} = 0,1417 ≈ 14,2 %")}]} }; }},
-  {title:"Was die Zeitung schreibt",marks:["n"],note:"„rund 93 %“ steht für jeden Anteil aus [92,5; 93,5) Prozent",mk:function(){ return {
-    fmt:"input",help:helpRunden(),q:"Die Schülerzeitung schreibt: „Rund 93 % kaufen etwas am Buffet.“ Die Zahl ist auf ganze Prozent gerundet. Gib das Intervall an, in dem der Anteil (in Prozent) laut dieser Angabe liegen kann. Die untere Grenze gehört dazu, die obere nicht.",
-    fields:[{l:"Anteil in % liegt in",kind:"iv",dec:1,r:IV(92.5,93.5,false,true),w:"Auf Einer gerundet: 0,5 nach jeder Seite. Die tatsächlichen 93,3 % liegen darin."}],
-    tips:["Auf ganze Prozent gerundet heißt: höchstens 0,5 Prozentpunkte daneben.","92,5 wird schon auf 93 aufgerundet, 93,5 bereits auf 94."],
-    sol:{viz:vIv(92,94,.5,.1),merk:"Eine gerundete Angabe ist ein Intervall.",steps:[
-      {t:"Das Rundungsintervall.",m:M("92,5 <= p < 93,5"),a:function(V){ V.band(IV(92.5,93.5,false,true)); }},
-      {t:"Der Wert aus c) liegt darin.",a:function(V){ V.mark(93.33,"93,3","--gold"); }}]} }; }},
+    fields:[{l:"Anteil derer, die mindestens eines der drei Dinge kaufen:",r:pm,tol:.051,u:"%",w:inside+" : "+n+" = "+N(Math.round(inside/n*10000)/10000)+"…"},{l:"Anteil derer, die ausschließlich Obst kaufen:",r:po,tol:.051,u:"%",w:k010+" : "+n+" = "+N(Math.round(k010/n*10000)/10000)+"…"}],
+    tips:["Mindestens eines: alle Felder in den Kreisen, also "+n+" − "+k000+".","Ausschließlich Obst ist ein einziges Feld."],
+    sol:{viz:vBars(n,2),merk:"Anteil = Teil : Ganzes. Das Ganze sind hier alle "+n+" Befragten.",steps:[
+      {t:"Mindestens eines.",m:M("{"+inside+"/"+n+"} = "+N(Math.round(inside/n*10000)/10000)+" ≈ "+N(pm)+" %"),a:function(V){ V.bar(0,"alle",n,n+" = 100 %","--ink-3"); V.bar(1,"mind. eines",inside,inside+" ≈ "+N(pm)+" %","--dx",.4); }},
+      {t:"Ausschließlich Obst.",m:M("{"+k010+"/"+n+"} = "+N(Math.round(k010/n*10000)/10000)+" ≈ "+N(po)+" %")}]} }; }},
+  {title:"Was die Zeitung schreibt",marks:["n"],note:"„rund "+pr+" %“ steht für jeden Anteil aus ["+N(pr-.5)+"; "+N(pr+.5)+") Prozent",mk:function(){ return {
+    fmt:"input",help:helpRunden(),q:"Die Schülerzeitung schreibt: „Rund "+pr+" % kaufen etwas am Buffet.“ Die Zahl ist auf ganze Prozent gerundet. Gib das Intervall an, in dem der Anteil (in Prozent) laut dieser Angabe liegen kann. Die untere Grenze gehört dazu, die obere nicht.",
+    fields:[{l:"Anteil in % liegt in",kind:"iv",dec:1,r:IV(pr-.5,pr+.5,false,true),w:"Auf Einer gerundet: 0,5 nach jeder Seite. Die tatsächlichen "+N(pm)+" % liegen darin."}],
+    tips:["Auf ganze Prozent gerundet heißt: höchstens 0,5 Prozentpunkte daneben.",N(pr-.5)+" wird schon auf "+pr+" aufgerundet, "+N(pr+.5)+" bereits auf "+(pr+1)+"."],
+    sol:{viz:vIv(pr-1,pr+1,.5,.1),merk:"Eine gerundete Angabe ist ein Intervall.",steps:[
+      {t:"Das Rundungsintervall.",m:M(N(pr-.5)+" <= p < "+N(pr+.5)),a:function(V){ V.band(IV(pr-.5,pr+.5,false,true)); }},
+      {t:"Der Wert aus c) liegt darin.",a:function(V){ V.mark(Math.round(inside/n*10000)/100,N(pm),"--gold"); }}]} }; }},
   {title:"Aussagen über die Mengen",marks:["drei","zwei","ges"],mk:function(){ return {
     fmt:"mc",pick:2,help:false,q:"Kreuze die beiden zutreffenden Aussagen an.",
-    items:[{s:M("|W ∪ G| = 190"),r:1,w:"132 + 104 − 46 = 190."},{s:M("|W ∩ O ∩ G| = 18"),r:1,w:"Die Mitte."},{s:M("|")+SR("(W ∪ O ∪ G)'")+M("| = 0"),r:0,w:"16 kaufen gar nichts."},
-      {s:M("|")+SR("W \\ G")+M("| = 104"),r:0,w:"Weckerl ohne Getränk: 74 + 12 = 86."},{s:M("O ⊆ W"),r:0,w:"34 kaufen Obst, aber kein Weckerl."}],
+    items:[{s:M("|W ∪ G| = "+WuG),r:1,w:W+" + "+G+" − "+WG+" = "+WuG+"."},{s:M("|W ∩ O ∩ G| = "+k111),r:1,w:"Die Mitte."},{s:M("|")+SR("(W ∪ O ∪ G)'")+M("| = 0"),r:0,w:k000+" kaufen gar nichts."},
+      {s:M("|")+SR("W \\ G")+M("| = "+G),r:0,w:"Weckerl ohne Getränk: "+k100+" + "+k110+" = "+WdG+"."},{s:M("O ⊆ W"),r:0,w:(k010+k011)+" kaufen Obst, aber kein Weckerl."}],
     tips:["Additionssatz für "+M("|W ∪ G|")+".","Für jede Aussage die Felder suchen."],
-    sol:{viz:vNumsSol(3,BUFN,BUF),merk:"Mit gefülltem Diagramm wird jede Frage zur Frage: welche Felder?",steps:[
-      {t:"Additionssatz.",m:M("|W ∪ G| = 132 + 104 - 46 = 190"),a:function(V){ V.reset(); V.sh("W ∪ G","--dx",.25); }},
-      {t:"Außen stehen 16, also ist das Komplement nicht leer.",a:function(V){ V.reset(); V.sh("(W ∪ O ∪ G)'","--dy",.3); }},
-      {t:SR("W \\ G")+" sind zwei Felder.",m:M("74 + 12 = 86"),a:function(V){ V.reset(); V.sh("W \\ G","--right",.3); }}]} }; }},
-  {title:"Ein Kombi-Angebot",marks:["preis"],note:"Kombi 3,50 € statt 3,90 €, rund 10,3 % billiger; "+M("E = 3,5k + 2,4w"),mk:function(){ return {
-    fmt:"input",help:false,q:"Das Buffet bietet ab sofort eine Kombination an: Weckerl und Getränk zusammen um 3,50 €. Um wie viel Prozent ist die Kombination billiger als der Einzelkauf? Gib außerdem einen Term für die Einnahmen "+M("E")+" (in Euro) an, wenn "+M("k")+" Kombinationen und "+M("w")+" einzelne Weckerl verkauft werden.",
-    fields:[{l:"billiger um",r:10.26,tol:.051,u:"%",w:"Einzeln 3,90 €, also 0,40 € weniger: 0,40 : 3,90 ≈ 0,1026."},{l:M("E ="),kind:"term",r:"3,5k + 2,4w",vars:["k","w"],w:"Jede Kombination bringt 3,50 €, jedes einzelne Weckerl 2,40 €."}],
-    tips:["Einzeln kosten Weckerl und Getränk 2,40 € + 1,50 €.","Die Ersparnis wird auf den alten Preis bezogen."],
-    sol:{viz:vBars(3.9,2),merk:"Prozentuale Ersparnis: Unterschied durch den ursprünglichen Preis.",steps:[
-      {t:"Einzelpreis und Kombipreis.",m:M("2,40 + 1,50 = 3,90"),a:function(V){ V.bar(0,"einzeln",3.9,"3,90 €","--ink-3"); V.bar(1,"Kombi",3.5,"3,50 €","--dx",.4); }},
-      {t:"Ersparnis bezogen auf 3,90 €.",m:M("{0,40/3,90} ≈ 0,1026 = 10,26 %")},
-      {t:"Einnahmen aus beiden Verkaufsarten.",m:M("E = 3,5k + 2,4w")}]} }; }},
-  {title:"Ein Bereich für die Einnahmen",marks:["preis"],note:"60 bis 80 Kombis: Einnahmen aus [210; 280] Euro",mk:function(){ return {
-    fmt:"input",help:false,q:"An einem Tag werden mindestens 60 und höchstens 80 Kombinationen verkauft. Gib das kleinste Intervall an, in dem die Einnahmen aus den Kombinationen (in Euro) liegen.",
-    fields:[{l:"Einnahmen in € liegen in",kind:"iv",r:IV(210,280,false,false),w:"60 · 3,50 = 210 und 80 · 3,50 = 280; beide Grenzen können vorkommen."}],
-    tips:["Rechne die Einnahmen für 60 und für 80 Kombinationen aus.","„mindestens“ und „höchstens“: Beide Grenzen gehören dazu."],
-    sol:{viz:vIv(200,290,10,5),merk:"Wird eine Größe mit einem positiven Faktor multipliziert, wandern beide Grenzen des Intervalls mit.",steps:[
-      {t:"Untere Grenze.",m:M("60 * 3,50 = 210"),a:function(V){ V.mark(210,"210","--rise"); }},
-      {t:"Obere Grenze.",m:M("80 * 3,50 = 280"),a:function(V){ V.mark(280,"280","--rise"); }},
-      {t:"Beide Grenzen kommen vor.",m:M("[210; 280]"),a:function(V){ V.band(IV(210,280,false,false)); }}]} }; }},
+    sol:{viz:vNumsSol(3,BUFN,c),merk:"Mit gefülltem Diagramm wird jede Frage zur Frage: welche Felder?",steps:[
+      {t:"Additionssatz.",m:M("|W ∪ G| = "+W+" + "+G+" - "+WG+" = "+WuG),a:function(V){ V.reset(); V.sh("W ∪ G","--dx",.25); }},
+      {t:"Außen stehen "+k000+", also ist das Komplement nicht leer.",a:function(V){ V.reset(); V.sh("(W ∪ O ∪ G)'","--dy",.3); }},
+      {t:SR("W \\ G")+" sind zwei Felder.",m:M(k100+" + "+k110+" = "+WdG),a:function(V){ V.reset(); V.sh("W \\ G","--right",.3); }}]} }; }},
+  {title:"Ein Kombi-Angebot",marks:["preis"],note:"Kombi "+E(pk)+" € statt "+E(sum)+" €, rund "+N(sp)+" % billiger; "+M("E = "+N(pk)+"k + "+N(pw)+"w"),mk:function(){ return {
+    fmt:"input",help:false,q:"Das Buffet bietet ab sofort eine Kombination an: Weckerl und Getränk zusammen um "+E(pk)+" €. Um wie viel Prozent ist die Kombination billiger als der Einzelkauf? Gib außerdem einen Term für die Einnahmen "+M("E")+" (in Euro) an, wenn "+M("k")+" Kombinationen und "+M("w")+" einzelne Weckerl verkauft werden.",
+    fields:[{l:"billiger um",r:sp,tol:.051,u:"%",w:"Einzeln "+E(sum)+" €, also "+E(save)+" € weniger: "+E(save)+" : "+E(sum)+" ≈ "+N(Math.round(save/sum*10000)/10000)+"."},{l:M("E ="),kind:"term",r:N(pk)+"k + "+N(pw)+"w",vars:["k","w"],w:"Jede Kombination bringt "+E(pk)+" €, jedes einzelne Weckerl "+E(pw)+" €."}],
+    tips:["Einzeln kosten Weckerl und Getränk "+E(pw)+" € + "+E(pg)+" €.","Die Ersparnis wird auf den alten Preis bezogen."],
+    sol:{viz:vBars(sum,2),merk:"Prozentuale Ersparnis: Unterschied durch den ursprünglichen Preis.",steps:[
+      {t:"Einzelpreis und Kombipreis.",m:M(E(pw)+" + "+E(pg)+" = "+E(sum)),a:function(V){ V.bar(0,"einzeln",sum,E(sum)+" €","--ink-3"); V.bar(1,"Kombi",pk,E(pk)+" €","--dx",.4); }},
+      {t:"Ersparnis bezogen auf "+E(sum)+" €.",m:M("{"+E(save)+"/"+E(sum)+"} ≈ "+N(Math.round(save/sum*10000)/10000)+" = "+N(sp)+" %")},
+      {t:"Einnahmen aus beiden Verkaufsarten.",m:M("E = "+N(pk)+"k + "+N(pw)+"w")}]} }; }},
+  {title:"Ein Bereich für die Einnahmen",marks:["preis"],note:k1+" bis "+k2+" Kombis: Einnahmen aus ["+N(e1)+"; "+N(e2)+"] Euro",mk:function(){ return {
+    fmt:"input",help:false,q:"An einem Tag werden mindestens "+k1+" und höchstens "+k2+" Kombinationen verkauft. Gib das kleinste Intervall an, in dem die Einnahmen aus den Kombinationen (in Euro) liegen.",
+    fields:[{l:"Einnahmen in € liegen in",kind:"iv",r:IV(e1,e2,false,false),w:k1+" · "+E(pk)+" = "+N(e1)+" und "+k2+" · "+E(pk)+" = "+N(e2)+"; beide Grenzen können vorkommen."}],
+    tips:["Rechne die Einnahmen für "+k1+" und für "+k2+" Kombinationen aus.","„mindestens“ und „höchstens“: Beide Grenzen gehören dazu."],
+    sol:{viz:vIv(ivlo,ivhi,10,5),merk:"Wird eine Größe mit einem positiven Faktor multipliziert, wandern beide Grenzen des Intervalls mit.",steps:[
+      {t:"Untere Grenze.",m:M(k1+" * "+E(pk)+" = "+N(e1)),a:function(V){ V.mark(e1,N(e1),"--rise"); }},
+      {t:"Obere Grenze.",m:M(k2+" * "+E(pk)+" = "+N(e2)),a:function(V){ V.mark(e2,N(e2),"--rise"); }},
+      {t:"Beide Grenzen kommen vor.",m:M("["+N(e1)+"; "+N(e2)+"]"),a:function(V){ V.band(IV(e1,e2,false,false)); }}]} }; }},
   {title:"Ein Drittel?",marks:["n","ges","zwei","drei"],mk:function(){ return {
     fmt:"offen",q:"In der Schülerzeitung steht: „Mehr als ein Drittel aller Befragten kauft ausschließlich ein Weckerl.“ Überprüfe diese Aussage mit den Daten der Umfrage und begründe.",
-    model:"Ausschließlich ein Weckerl kaufen 74 Personen, das ist das Einzelfeld von "+M("W")+". Ein Drittel von 240 sind 80. Da 74 &lt; 80 (74 : 240 ≈ 30,8 %), ist die Aussage falsch. Mehr als ein Drittel kauft zwar ein Weckerl (132), aber nicht ausschließlich.",
-    points:["Die richtige Anzahl wird verwendet: 74, nicht 132.","Der Vergleich mit einem Drittel von 240, also 80, oder mit 33,3 % wird gezogen.","Das Ergebnis lautet: Die Aussage ist falsch."],
-    tips:["„Ausschließlich ein Weckerl“ ist ein einziges Feld.","Ein Drittel von 240 ist 80."],
-    sol:{viz:vNumsSol(3,BUFN,BUF),merk:"„ausschließlich“ ist das Einzelfeld, nicht der ganze Kreis.",steps:[
-      {t:"Ausschließlich Weckerl: das Einzelfeld.",m:"74",a:function(V){ V.sh(["100"],"--rise",.4); }},
-      {t:"Ein Drittel der Befragten.",m:M("240 : 3 = 80")},
-      {t:"Vergleich.",m:M("74 < 80")+", also falsch. Der ganze Kreis "+M("W")+" hätte 132 Personen, das wäre mehr als ein Drittel."}]} }; }}
-  ]});
+    model:"Ausschließlich ein Weckerl kaufen "+k100+" Personen, das ist das Einzelfeld von "+M("W")+". Ein Drittel von "+n+" sind "+N(third)+". Da "+k100+" &lt; "+N(third)+" ("+k100+" : "+n+" ≈ "+N(Math.round(k100/n*1000)/10)+" %), ist die Aussage falsch. Mehr als ein Drittel kauft zwar ein Weckerl ("+W+"), aber nicht ausschließlich.",
+    points:["Die richtige Anzahl wird verwendet: "+k100+", nicht "+W+".","Der Vergleich mit einem Drittel von "+n+", also "+N(third)+", oder mit 33,3 % wird gezogen.","Das Ergebnis lautet: Die Aussage ist falsch."],
+    tips:["„Ausschließlich ein Weckerl“ ist ein einziges Feld.","Ein Drittel von "+n+" ist "+N(third)+"."],
+    sol:{viz:vNumsSol(3,BUFN,c),merk:"„ausschließlich“ ist das Einzelfeld, nicht der ganze Kreis.",steps:[
+      {t:"Ausschließlich Weckerl: das Einzelfeld.",m:String(k100),a:function(V){ V.sh(["100"],"--rise",.4); }},
+      {t:"Ein Drittel der Befragten.",m:M(n+" : 3 = "+N(third))},
+      {t:"Vergleich.",m:M(k100+" < "+N(third))+", also falsch. Der ganze Kreis "+M("W")+" hätte "+W+" Personen, das wäre mehr als ein Drittel."}]} }; }}
+  ]};
+  return T4;
+}
+(function(){
+  var I=tour4(BUF_PRE[0]);
+  TOURS.push({id:"g4",title:"Das Schulbuffet",sub:"Eine Umfrage, ein Venn-Diagramm und ein Rabatt",lead:I.lead,angabe:I.angabe,parts:I.parts,vary:function(){ return tour4(pick(BUF_PRE)); }});
+})();
 
 /* ---------- Tour 5 · Der Springbrunnen ---------- */
-var BRF=qf(-.5,2,0), BRF2=qf(-.5,3,0);
-function brDraw(two){ return function(P){ P.fn(BRF,"--dx",3,{from:0,to:4}); if(two) P.fn(BRF2,"--right",3,{from:0,to:6}); S("rect",{x:P.X(-.25),y:P.Y(0),width:P.X(.25)-P.X(-.25),height:7,fill:"var(--ink-2)"},P.to); }; }
-var BRG={W:560,H:420,xr:[-1,7],yr:[-1,5],xl:"x in m",yl:"h in m",sx:1,sy:1};
-TOURS.push({id:"g5",title:"Der Springbrunnen im Stadtpark",sub:"Eine Parabel, ihre Nullstellen und ein Kind, das trocken bleiben will",
-  lead:"Eine zusammenhängende Aufgabe zu den Routen 9 und 10, mit Intervallen und Prozentrechnung. Die nächste Teilaufgabe öffnet sich, sobald die vorige gelöst oder ihr Lösungsweg angesehen ist. Tippst du in eine Teilaufgabe, leuchten in der Angabe die Stellen auf, die du dafür brauchst.",
-  angabe:"<p>Im Stadtpark steht ein neuer Springbrunnen. Aus einer "+amk("duese","Düse auf Bodenhöhe")+" schießt ein Wasserstrahl schräg nach oben und fällt wieder auf den Boden. Die Form des Strahls wird durch "+amk("h","die Funktion "+M("h")+" mit "+M("h(x) = -0,5x^2 + 2x")+" beschrieben")+". Dabei ist "+amk("x",M("x")+" der waagrechte Abstand von der Düse und "+M("h(x)")+" die Höhe des Strahls, beides in Metern")+".</p>"+
-    "<p>"+amk("kind","Lena ist 1,5 m groß")+" und möchte unter dem Strahl durchlaufen, ohne nass zu werden. "+amk("neu","Im Sommer soll der Wasserdruck erhöht werden. Dann gilt "+M("h_2(x) = -0,5x^2 + 3x")+".")+"</p>",
+/* h(x) = -a x^2 + b x. Die Voreinstellungen sind so gewählt, dass Nullstellen, Scheitel und die Stellen zur Körpergröße glatte Werte haben.
+   tour5(P) baut Angabe und Teilaufgaben; die Probeschularbeit zieht über vary() eine der Voreinstellungen. */
+var BR_PRE=[
+  {a:.5,b:2,x1:1,hc:1.5,who:"Lena",f:1.5},
+  {a:.25,b:2,x1:1,hc:1.75,who:"Paul",f:1.25},
+  {a:.4,b:2,x1:1,hc:1.6,who:"Tim",f:1.2}];
+function tour5(P){
+  var N=num, rd=function(v){ return Math.round(v*1e6)/1e6; };
+  var a=P.a, b=P.b, L=rd(b/a), H=rd(b*b/(4*a)), xv=L/2, x1=P.x1, x2=L-x1, hc=P.hc, f=P.f,
+      b2=rd(b*f), L2=rd(b2/a), H2=rd(b2*b2/(4*a)), xv2=L2/2, b3=2*b, L3=2*L, H3=4*H, pct=rd((f-1)*100), who=P.who;
+  var hx="-"+N(a)+"x^2 + "+N(b)+"x", h2x="-"+N(a)+"x^2 + "+N(b2)+"x", h3x="-"+N(a)+"x^2 + "+N(b3)+"x";
+  var BRF=qf(-a,b,0), BRF2=qf(-a,b2,0), BRF3=qf(-a,b3,0);
+  var XR=[-1,Math.ceil(L2)+1], YR=[-1,Math.ceil(H2)+1];
+  var BRG={W:560,H:420,xr:XR,yr:YR,xl:"x in m",yl:"h in m",sx:1,sy:1};
+  var snap=(Math.abs(xv-Math.round(xv))>1e-9||Math.abs(H-Math.round(H))>1e-9)?.5:1;
+  function brDraw(two){ return function(Q){ Q.fn(BRF,"--dx",3,{from:0,to:L}); if(two) Q.fn(BRF2,"--right",3,{from:0,to:L2}); S("rect",{x:Q.X(-.25),y:Q.Y(0),width:Q.X(.25)-Q.X(-.25),height:7,fill:"var(--ink-2)"},Q.to); }; }
+  function pr(x){ return M("h("+x+") = -"+N(a)+" * "+x+"^2 + "+N(b)+" * "+x+" = "+N(hc)); }
+  var fac="x * (-"+N(a)+"x + "+N(b)+") = 0";
+  var T5={
+  angabe:"<p>Im Stadtpark steht ein neuer Springbrunnen. Aus einer "+amk("duese","Düse auf Bodenhöhe")+" schießt ein Wasserstrahl schräg nach oben und fällt wieder auf den Boden. Die Form des Strahls wird durch "+amk("h","die Funktion "+M("h")+" mit "+M("h(x) = "+hx)+" beschrieben")+". Dabei ist "+amk("x",M("x")+" der waagrechte Abstand von der Düse und "+M("h(x)")+" die Höhe des Strahls, beides in Metern")+".</p>"+
+    "<p>"+amk("kind",who+" ist "+N(hc)+" m groß")+" und möchte unter dem Strahl durchlaufen, ohne nass zu werden. "+amk("neu","Im Sommer soll der Wasserdruck erhöht werden. Dann gilt "+M("h_2(x) = "+h2x)+".")+"</p>",
   parts:[
-  {title:"Was die Parameter verraten",marks:["h","duese"],note:M("a = -0,5 < 0")+": nach unten geöffnet; "+M("c = 0")+": Start im Punkt "+M("(0 | 0)"),mk:function(){ return {
-    fmt:"luecke",help:helpParLab({b:1,a:-.5,c:0}),q:"Vergleiche "+M("h(x) = -0,5x^2 + 2x")+" mit der allgemeinen Form "+M("a * x^2 + b * x + c")+".",
+  {title:"Was die Parameter verraten",marks:["h","duese"],note:M("a = -"+N(a)+" < 0")+": nach unten geöffnet; "+M("c = 0")+": Start im Punkt "+M("(0 | 0)"),mk:function(){ return {
+    fmt:"luecke",help:helpParLab({b:1,a:-a,c:0}),q:"Vergleiche "+M("h(x) = "+hx)+" mit der allgemeinen Form "+M("a * x^2 + b * x + c")+".",
     satz:"Der Graph von "+M("h")+" ist nach unten geöffnet, weil ___. Der Strahl beginnt auf Bodenhöhe, weil ___.",
-    gaps:[{o:[M("a = -0,5 < 0"),M("b = 2 > 0"),M("x >= 0")],r:0,w:"Nur das Vorzeichen von "+M("a")+" bestimmt die Öffnung."},{o:[M("c = 0"),M("b ≠ 0"),M("a < 0")],r:0,w:M("h(0) = c = 0")+": An der Düse ist die Höhe 0."}],
+    gaps:[{o:[M("a = -"+N(a)+" < 0"),M("b = "+N(b)+" > 0"),M("x >= 0")],r:0,w:"Nur das Vorzeichen von "+M("a")+" bestimmt die Öffnung."},{o:[M("c = 0"),M("b ≠ 0"),M("a < 0")],r:0,w:M("h(0) = c = 0")+": An der Düse ist die Höhe 0."}],
     tips:["Lies "+M("a")+", "+M("b")+" und "+M("c")+" ab. Ein fehlendes Glied hat den Parameter 0.","Was ist "+M("h(0)")+"?"],
     sol:{viz:vQ(BRG.xr,BRG.yr,BRG),merk:M("a")+": Öffnung. "+M("c = h(0)")+": Höhe an der Stelle 0. Wegen "+M("b ≠ 0")+" liegt der Scheitel nicht auf der senkrechten Achse.",steps:[
-      {t:"Parameter ablesen.",m:M("a = -0,5")+", "+M("b = 2")+", "+M("c = 0")},
-      {t:M("a < 0")+": nach unten geöffnet.",a:function(V){ V.F(BRF,"--dx",0,{from:0,to:4}); }},
+      {t:"Parameter ablesen.",m:M("a = -"+N(a))+", "+M("b = "+N(b))+", "+M("c = 0")},
+      {t:M("a < 0")+": nach unten geöffnet.",a:function(V){ V.F(BRF,"--dx",0,{from:0,to:L}); }},
       {t:M("h(0) = 0")+": Der Strahl beginnt im Punkt "+M("(0 | 0)")+", an der Düse.",a:function(V){ V.Pt(0,0,"Düse","--right",0,{dx:10,dy:-10}); }}]} }; }},
-  {title:"Wo das Wasser landet",marks:["h","x"],note:"Landepunkt: 4 m von der Düse, "+qL([0,4]),mk:function(){ return {
-    fmt:"input",help:helpNull(),q:"Der Strahl trifft dort auf den Boden, wo seine Höhe 0 ist. Löse die Gleichung "+M("-0,5x^2 + 2x = 0")+" und gib an, wie weit von der Düse entfernt das Wasser auf dem Boden auftrifft. "+LSET,
-    fields:[Lf([0,4],M("x * (-0,5x + 2) = 0")+"."),{l:"Das Wasser trifft auf in einer Entfernung von",r:4,u:"m",w:"Die Lösung 0 ist die Düse selbst."}],
+  {title:"Wo das Wasser landet",marks:["h","x"],note:"Landepunkt: "+N(L)+" m von der Düse, "+qL([0,L]),mk:function(){ return {
+    fmt:"input",help:helpNull(),q:"Der Strahl trifft dort auf den Boden, wo seine Höhe 0 ist. Löse die Gleichung "+M("-"+N(a)+"x^2 + "+N(b)+"x = 0")+" und gib an, wie weit von der Düse entfernt das Wasser auf dem Boden auftrifft. "+LSET,
+    fields:[Lf([0,L],M(fac)+"."),{l:"Das Wasser trifft auf in einer Entfernung von",r:L,u:"m",w:"Die Lösung 0 ist die Düse selbst."}],
     tips:["Heb "+M("x")+" heraus.","Ein Produkt ist 0, wenn ein Faktor 0 ist. Welche der beiden Lösungen ist die Düse?"],
     sol:{viz:vQ(BRG.xr,BRG.yr,BRG),merk:"Nullstellen der Funktion sind die Lösungen von "+M("h(x) = 0")+". Im Sachzusammenhang: die Stellen, an denen der Strahl auf Bodenhöhe ist.",steps:[
-      {t:"Herausheben.",m:M("x * (-0,5x + 2) = 0")},
-      {t:"Jeder Faktor 0.",m:M("x = 0")+" &nbsp; oder &nbsp; "+M("-0,5x + 2 = 0")+", also "+M("x = 4"),a:function(V){ V.F(BRF,"--dx",0,{from:0,to:4}); V.Pt(0,0,"Düse","--right",.4,{dx:10,dy:-10}); V.Pt(4,0,"4 m","--rise",.7,{dy:-12}); }},
-      "An der Stelle 0 ist die Düse. Das Wasser landet 4 m davon entfernt."]} }; }},
-  {title:"Der höchste Punkt",marks:["h"],note:"Höchster Punkt: "+M("(2 | 2)")+", also 2 m hoch in 2 m Abstand",mk:function(){ return {
+      {t:"Herausheben.",m:M(fac)},
+      {t:"Jeder Faktor 0.",m:M("x = 0")+" &nbsp; oder &nbsp; "+M("-"+N(a)+"x + "+N(b)+" = 0")+", also "+M("x = "+N(L)),a:function(V){ V.F(BRF,"--dx",0,{from:0,to:L}); V.Pt(0,0,"Düse","--right",.4,{dx:10,dy:-10}); V.Pt(L,0,N(L)+" m","--rise",.7,{dy:-12}); }},
+      "An der Stelle 0 ist die Düse. Das Wasser landet "+N(L)+" m davon entfernt."]} }; }},
+  {title:"Der höchste Punkt",marks:["h"],note:"Höchster Punkt: "+M("("+N(xv)+" | "+N(H)+")")+", also "+N(H)+" m hoch in "+N(xv)+" m Abstand",mk:function(){ return {
     fmt:"input",help:false,q:"Eine Parabel ist symmetrisch zur senkrechten Geraden durch ihren Scheitel. Nutze die beiden Nullstellen aus b), um den höchsten Punkt des Strahls zu bestimmen.",
-    fields:[{l:"Abstand von der Düse:",r:2,u:"m",w:"Genau in der Mitte zwischen 0 und 4."},{l:"Höhe des Strahls dort:",r:2,u:"m",w:M("h(2) = -0,5 * 4 + 2 * 2")+"."}],
+    fields:[{l:"Abstand von der Düse:",r:xv,u:"m",w:"Genau in der Mitte zwischen 0 und "+N(L)+"."},{l:"Höhe des Strahls dort:",r:H,u:"m",w:M("h("+N(xv)+") = -"+N(a)+" * "+N(rd(xv*xv))+" + "+N(b)+" * "+N(xv))+"."}],
     tips:["Der Scheitel liegt genau in der Mitte zwischen den beiden Nullstellen.","Setz die Stelle in "+M("h")+" ein."],
     sol:{viz:vQ(BRG.xr,BRG.yr,BRG),merk:"Ohne Lösungsformel: Die Stelle des Scheitels ist die Mitte der beiden Nullstellen. Den Funktionswert liefert Einsetzen.",steps:[
-      {t:"Die Nullstellen 0 und 4. Die Symmetrieachse liegt in der Mitte.",m:M("{0 + 4/2} = 2"),a:function(V){ V.F(BRF,"--dx",0,{from:0,to:4}); V.Pt(0,0,"","--rise"); V.Pt(4,0,"","--rise"); V.V(2,"--gold",.4); }},
-      {t:"Einsetzen.",m:M("h(2) = -0,5 * 4 + 4 = 2"),a:function(V){ V.Pt(2,2,"(2 | 2)","--right",0,{dy:-12}); }},
-      "Der Strahl ist 2 m von der Düse entfernt am höchsten, nämlich 2 m."]} }; }},
+      {t:"Die Nullstellen 0 und "+N(L)+". Die Symmetrieachse liegt in der Mitte.",m:M("{0 + "+N(L)+"/2} = "+N(xv)),a:function(V){ V.F(BRF,"--dx",0,{from:0,to:L}); V.Pt(0,0,"","--rise"); V.Pt(L,0,"","--rise"); V.V(xv,"--gold",.4); }},
+      {t:"Einsetzen.",m:M("h("+N(xv)+") = -"+N(a)+" * "+N(rd(xv*xv))+" + "+N(rd(b*xv))+" = "+N(H)),a:function(V){ V.Pt(xv,H,"("+N(xv)+" | "+N(H)+")","--right",0,{dy:-12}); }},
+      "Der Strahl ist "+N(xv)+" m von der Düse entfernt am höchsten, nämlich "+N(H)+" m."]} }; }},
   {title:"Der Strahl im Bild",marks:["h"],mk:function(){ return {
     fmt:"parab",help:false,q:"Zeichne den Graphen von "+M("h")+". Setz zuerst den Scheitel aus c), dann einen zweiten Punkt.",
-    W:560,H:420,xr:[-1,7],yr:[-3,5],xl:"x in m",yl:"h in m",a:-.5,u:2,v:2,
-    tips:["Der Scheitel ist "+M("(2 | 2)")+".","Auch die Nullstellen aus b) sind Punkte des Graphen, etwa "+M("(4 | 0)")+"."],
-    sol:{viz:vQ([-1,7],[-3,5],{W:560,H:420,xl:"x in m",yl:"h in m"}),merk:"Scheitel und ein weiterer Punkt legen eine Parabel fest, wenn man weiß, dass sie zu "+M("y = a * x^2 + …")+" gehört.",steps:[
-      {t:"Scheitel und die beiden Nullstellen.",a:function(V){ V.Pt(2,2,"S","--right"); V.Pt(0,0,"","--dy",.2); V.Pt(4,0,"","--dy",.3); }},
-      {t:"Vom Scheitel 2 zur Seite: "+M("4 * (-0,5) = -2")+", also 2 hinunter. Das passt zu den Nullstellen.",a:function(V){ V.F(BRF,"--dx",.3); }},
-      "Links von 0 und rechts von 4 hat die Kurve im Sachzusammenhang keine Bedeutung mehr: Dort ist kein Wasser."]} }; }},
-  {title:"Wo der Strahl 1,5 m hoch ist",marks:["h","kind"],note:"In 1 m und 3 m Abstand ist der Strahl genau 1,5 m hoch",mk:function(){ return {
-    fmt:"input",help:helpSchnitt(),fig:gfig(560,420,[-1,7],[-1,5],"x in m","h in m",1,1,brDraw(false)),
-    q:"Die Gleichung "+M("-0,5x^2 + 2x = 1,5")+" kannst du noch nicht rechnerisch lösen. Lies ihre Lösungen aus der Abbildung ab und überprüfe sie durch Einsetzen. "+LSET,
-    fields:[Lf([1,3],"Probe: "+M("h(1) = -0,5 + 2 = 1,5")+" und "+M("h(3) = -4,5 + 6 = 1,5")+".")],
-    tips:["Denk dir die waagrechte Linie "+M("y = 1,5")+".","Lies die ersten Koordinaten der Schnittpunkte ab und setz sie in "+M("h")+" ein."],
-    sol:{viz:vQ([-1,7],[-1,5],{W:560,H:420,xl:"x in m",yl:"h in m",pre:brDraw(false)}),merk:"Eine Gleichung, die man noch nicht rechnen kann, löst man grafisch und sichert das Ergebnis mit der Probe ab.",steps:[
-      {t:"Waagrechte Linie in der Höhe 1,5.",a:function(V){ V.L(0,1.5,"--gold"); }},
-      {t:"Zwei Schnittpunkte.",a:function(V){ V.Pt(1,1.5,"(1 | 1,5)","--rise",0,{dx:-10,anchor:"end"}); V.Pt(3,1.5,"(3 | 1,5)","--rise",.3); }},
-      {t:"Probe.",m:M("h(1) = -0,5 + 2 = 1,5")+" ✓ &nbsp; "+M("h(3) = -4,5 + 6 = 1,5")+" ✓"}]} }; }},
-  {title:"Trocken durchlaufen",marks:["kind"],note:"Lena bleibt trocken für "+M("x ∈ (1; 3)"),mk:function(){ return {
-    fmt:"input",help:false,q:"Lena läuft quer unter dem Strahl durch. Gib das Intervall der Abstände "+M("x")+" an, in denen der Strahl höher als 1,5 m ist.",
-    fields:[{l:M("x ∈"),kind:"iv",r:IV(1,3,true,true),w:"Zwischen den beiden Stellen aus e) liegt der Strahl über 1,5 m. An den Rändern ist er genau 1,5 m hoch, „höher als“ schließt sie aus."}],
+    W:560,H:420,xr:[-1,Math.ceil(L)+3],yr:[-3,Math.ceil(H)+3],xl:"x in m",yl:"h in m",a:-a,u:xv,v:H,snapX:snap,snapY:snap,
+    tips:["Der Scheitel ist "+M("("+N(xv)+" | "+N(H)+")")+".","Auch die Nullstellen aus b) sind Punkte des Graphen, etwa "+M("("+N(L)+" | 0)")+"."],
+    sol:{viz:vQ([-1,Math.ceil(L)+3],[-3,Math.ceil(H)+3],{W:560,H:420,xl:"x in m",yl:"h in m"}),merk:"Scheitel und ein weiterer Punkt legen eine Parabel fest, wenn man weiß, dass sie zu "+M("y = a * x^2 + …")+" gehört.",steps:[
+      {t:"Scheitel und die beiden Nullstellen.",a:function(V){ V.Pt(xv,H,"S","--right"); V.Pt(0,0,"","--dy",.2); V.Pt(L,0,"","--dy",.3); }},
+      {t:"Vom Scheitel "+N(xv)+" zur Seite: "+M(N(rd(xv*xv))+" * (-"+N(a)+") = -"+N(H))+", also "+N(H)+" hinunter. Das passt zu den Nullstellen.",a:function(V){ V.F(BRF,"--dx",.3); }},
+      "Links von 0 und rechts von "+N(L)+" hat die Kurve im Sachzusammenhang keine Bedeutung mehr: Dort ist kein Wasser."]} }; }},
+  {title:"Wo der Strahl "+N(hc)+" m hoch ist",marks:["h","kind"],note:"In "+N(x1)+" m und "+N(x2)+" m Abstand ist der Strahl genau "+N(hc)+" m hoch",mk:function(){ return {
+    fmt:"input",help:helpSchnitt(),fig:gfig(560,420,XR,YR,"x in m","h in m",1,1,brDraw(false)),
+    q:"Die Gleichung "+M("-"+N(a)+"x^2 + "+N(b)+"x = "+N(hc))+" kannst du noch nicht rechnerisch lösen. Lies ihre Lösungen aus der Abbildung ab und überprüfe sie durch Einsetzen. "+LSET,
+    fields:[Lf([x1,x2],"Probe: "+pr(x1)+" und "+pr(x2)+".")],
+    tips:["Denk dir die waagrechte Linie "+M("y = "+N(hc))+".","Lies die ersten Koordinaten der Schnittpunkte ab und setz sie in "+M("h")+" ein."],
+    sol:{viz:vQ(XR,YR,{W:560,H:420,xl:"x in m",yl:"h in m",pre:brDraw(false)}),merk:"Eine Gleichung, die man noch nicht rechnen kann, löst man grafisch und sichert das Ergebnis mit der Probe ab.",steps:[
+      {t:"Waagrechte Linie in der Höhe "+N(hc)+".",a:function(V){ V.L(0,hc,"--gold"); }},
+      {t:"Zwei Schnittpunkte.",a:function(V){ V.Pt(x1,hc,"("+N(x1)+" | "+N(hc)+")","--rise",0,{dx:-10,anchor:"end"}); V.Pt(x2,hc,"("+N(x2)+" | "+N(hc)+")","--rise",.3); }},
+      {t:"Probe.",m:pr(x1)+" ✓ &nbsp; "+pr(x2)+" ✓"}]} }; }},
+  {title:"Trocken durchlaufen",marks:["kind"],note:who+" bleibt trocken für "+M("x ∈ ("+N(x1)+"; "+N(x2)+")"),mk:function(){ return {
+    fmt:"input",help:false,q:who+" läuft quer unter dem Strahl durch. Gib das Intervall der Abstände "+M("x")+" an, in denen der Strahl höher als "+N(hc)+" m ist.",
+    fields:[{l:M("x ∈"),kind:"iv",r:IV(x1,x2,true,true),w:"Zwischen den beiden Stellen aus e) liegt der Strahl über "+N(hc)+" m. An den Rändern ist er genau "+N(hc)+" m hoch, „höher als“ schließt sie aus."}],
     tips:["Zwischen den Stellen aus e) ist der Strahl höher, außerhalb niedriger.","„Höher als“: Gehören die Ränder dazu?"],
-    sol:{viz:vQ([-1,7],[-1,5],{W:560,H:420,xl:"x in m",yl:"h in m",pre:brDraw(false)}),merk:"Wo ein Graph über einer waagrechten Linie liegt, liest man als Intervall der ersten Koordinaten ab. Echte Ungleichung: offene Ränder.",steps:[
-      {t:"Über der Linie liegt der Strahl zwischen 1 und 3.",a:function(V){ V.L(0,1.5,"--gold"); V.Sg(1,0,3,0,"--rise",.3,{w:7}); }},
-      {t:"Bei 1 und 3 ist er genau 1,5 m hoch. „Höher als“ schließt diese Ränder aus.",m:M("(1; 3)")}]} }; }},
-  {title:"Mehr Druck",marks:["neu","h"],note:"Mit mehr Druck: Landepunkt 6 m (+50 %), höchster Punkt 4,5 m",mk:function(){ return {
-    fmt:"input",help:helpStreifen("eins"),q:"Mit mehr Wasserdruck gilt "+M("h_2(x) = -0,5x^2 + 3x")+". Berechne wie in b) und c).",
-    fields:[{l:"Neuer Landepunkt: Entfernung von der Düse",r:6,u:"m",w:M("x * (-0,5x + 3) = 0")+"."},{l:"Um so viel Prozent landet das Wasser weiter entfernt als vorher:",r:50,u:"%",w:"Von 4 m auf 6 m: "+M("{6/4} = 1,5")+"."},
-      {l:"Neue größte Höhe des Strahls:",r:4.5,u:"m",w:"Mitte zwischen 0 und 6 ist 3, "+M("h_2(3) = -4,5 + 9")+"."}],
+    sol:{viz:vQ(XR,YR,{W:560,H:420,xl:"x in m",yl:"h in m",pre:brDraw(false)}),merk:"Wo ein Graph über einer waagrechten Linie liegt, liest man als Intervall der ersten Koordinaten ab. Echte Ungleichung: offene Ränder.",steps:[
+      {t:"Über der Linie liegt der Strahl zwischen "+N(x1)+" und "+N(x2)+".",a:function(V){ V.L(0,hc,"--gold"); V.Sg(x1,0,x2,0,"--rise",.3,{w:7}); }},
+      {t:"Bei "+N(x1)+" und "+N(x2)+" ist er genau "+N(hc)+" m hoch. „Höher als“ schließt diese Ränder aus.",m:M("("+N(x1)+"; "+N(x2)+")")}]} }; }},
+  {title:"Mehr Druck",marks:["neu","h"],note:"Mit mehr Druck: Landepunkt "+N(L2)+" m (+"+N(pct)+" %), höchster Punkt "+N(H2)+" m",mk:function(){ return {
+    fmt:"input",help:helpStreifen("eins"),q:"Mit mehr Wasserdruck gilt "+M("h_2(x) = "+h2x)+". Berechne wie in b) und c).",
+    fields:[{l:"Neuer Landepunkt: Entfernung von der Düse",r:L2,u:"m",w:M("x * (-"+N(a)+"x + "+N(b2)+") = 0")+"."},{l:"Um so viel Prozent landet das Wasser weiter entfernt als vorher:",r:pct,u:"%",w:"Von "+N(L)+" m auf "+N(L2)+" m: "+M("{"+N(L2)+"/"+N(L)+"} = "+N(f))+"."},
+      {l:"Neue größte Höhe des Strahls:",r:H2,u:"m",w:"Mitte zwischen 0 und "+N(L2)+" ist "+N(xv2)+", "+M("h_2("+N(xv2)+") = -"+N(a)+" * "+N(rd(xv2*xv2))+" + "+N(b2)+" * "+N(xv2))+"."}],
     tips:["Herausheben wie in b). Der Scheitel liegt wieder in der Mitte der Nullstellen.","Prozent: neuer Wert durch alten Wert."],
     sol:{viz:vQ(BRG.xr,BRG.yr,BRG),merk:"Mit "+M("c = 0")+" liefern Herausheben und Symmetrie Landepunkt und Scheitel ohne Lösungsformel.",steps:[
-      {t:"Nullstellen.",m:M("x * (-0,5x + 3) = 0")+" &nbsp; "+M("x = 0")+" oder "+M("x = 6"),a:function(V){ V.F(BRF,"--ink-3",0,{from:0,to:4}); V.F(BRF2,"--right",.3,{from:0,to:6}); V.Pt(6,0,"6 m","--rise",.8,{dy:-12}); }},
-      {t:"Prozentuelle Änderung.",m:M("{6/4} = 1,5")+" &nbsp; also &nbsp; +50 %"},
-      {t:"Scheitel in der Mitte.",m:M("h_2(3) = -0,5 * 9 + 9 = 4,5"),a:function(V){ V.Pt(3,4.5,"(3 | 4,5)","--right",0,{dy:-12}); }}]} }; }},
+      {t:"Nullstellen.",m:M("x * (-"+N(a)+"x + "+N(b2)+") = 0")+" &nbsp; "+M("x = 0")+" oder "+M("x = "+N(L2)),a:function(V){ V.F(BRF,"--ink-3",0,{from:0,to:L}); V.F(BRF2,"--right",.3,{from:0,to:L2}); V.Pt(L2,0,N(L2)+" m","--rise",.8,{dy:-12}); }},
+      {t:"Prozentuelle Änderung.",m:M("{"+N(L2)+"/"+N(L)+"} = "+N(f))+" &nbsp; also &nbsp; +"+N(pct)+" %"},
+      {t:"Scheitel in der Mitte.",m:M("h_2("+N(xv2)+") = -"+N(a)+" * "+N(rd(xv2*xv2))+" + "+N(rd(b2*xv2))+" = "+N(H2)),a:function(V){ V.Pt(xv2,H2,"("+N(xv2)+" | "+N(H2)+")","--right",0,{dy:-12}); }}]} }; }},
   {title:"Doppelt so hoch?",marks:["h","neu"],mk:function(){ return {
-    fmt:"offen",help:helpParLab({b:1,a:-.5,c:0}),q:"Im Gemeinderat sagt jemand: „Wenn wir in "+M("h(x) = -0,5x^2 + 2x")+" die Zahl 2 verdoppeln, also "+M("-0,5x^2 + 4x")+", wird der Strahl doppelt so weit und doppelt so hoch.“ Überprüfe beide Teile der Behauptung rechnerisch.",
-    model:"Nullstellen von "+M("-0,5x^2 + 4x")+": "+M("x * (-0,5x + 4) = 0")+", also 0 und 8. Der Strahl landet in 8 m statt 4 m Entfernung, also doppelt so weit. Das stimmt.<br>Der Scheitel liegt in der Mitte bei "+M("x = 4")+": "+M("-0,5 * 16 + 16 = 8")+". Die größte Höhe ist 8 m statt 2 m, also viermal so hoch. Dieser Teil stimmt nicht.",
-    points:["Der neue Landepunkt 8 m ist berechnet und als doppelt so weit erkannt.","Die neue größte Höhe 8 m ist berechnet (Mitte der Nullstellen, Einsetzen).","Die Höhe ist als vierfach erkannt: Die Behauptung stimmt nur für die Weite."],
-    tips:["Rechne wie in b) und c) mit der neuen Funktion.","Vergleiche Weite und Höhe jeweils mit den alten Werten 4 m und 2 m."],
-    sol:{viz:vQ([-1,9],[-1,9],{W:520,H:480,xl:"x in m",yl:"h in m"}),merk:"Verdoppeln von "+M("b")+" verdoppelt hier die Weite, aber die Höhe wächst auf das Vierfache: Höhe ist ein Funktionswert und wächst quadratisch mit.",steps:[
-      {t:"Alter Strahl: Weite 4 m, Höhe 2 m.",a:function(V){ V.F(BRF,"--ink-3",0,{from:0,to:4}); V.Pt(2,2,"","--ink-3",.3); }},
-      {t:"Neue Nullstellen.",m:M("x * (-0,5x + 4) = 0")+" &nbsp; "+M("x = 0")+" oder "+M("x = 8"),a:function(V){ V.F(qf(-.5,4,0),"--right",0,{from:0,to:8}); V.Pt(8,0,"8 m","--rise",.6,{dy:-12,dx:-10,anchor:"end"}); }},
-      {t:"Neuer Scheitel in der Mitte.",m:M("-0,5 * 4^2 + 4 * 4 = 8"),a:function(V){ V.Pt(4,8,"(4 | 8)","--right",0,{dy:-10}); }},
+    fmt:"offen",help:helpParLab({b:1,a:-a,c:0}),q:"Im Gemeinderat sagt jemand: „Wenn wir in "+M("h(x) = "+hx)+" die Zahl "+N(b)+" verdoppeln, also "+M(h3x)+", wird der Strahl doppelt so weit und doppelt so hoch.“ Überprüfe beide Teile der Behauptung rechnerisch.",
+    model:"Nullstellen von "+M(h3x)+": "+M("x * (-"+N(a)+"x + "+N(b3)+") = 0")+", also 0 und "+N(L3)+". Der Strahl landet in "+N(L3)+" m statt "+N(L)+" m Entfernung, also doppelt so weit. Das stimmt.<br>Der Scheitel liegt in der Mitte bei "+M("x = "+N(L))+": "+M("-"+N(a)+" * "+N(rd(L*L))+" + "+N(b3)+" * "+N(L)+" = "+N(H3))+". Die größte Höhe ist "+N(H3)+" m statt "+N(H)+" m, also viermal so hoch. Dieser Teil stimmt nicht.",
+    points:["Der neue Landepunkt "+N(L3)+" m ist berechnet und als doppelt so weit erkannt.","Die neue größte Höhe "+N(H3)+" m ist berechnet (Mitte der Nullstellen, Einsetzen).","Die Höhe ist als vierfach erkannt: Die Behauptung stimmt nur für die Weite."],
+    tips:["Rechne wie in b) und c) mit der neuen Funktion.","Vergleiche Weite und Höhe jeweils mit den alten Werten "+N(L)+" m und "+N(H)+" m."],
+    sol:{viz:vQ([-1,L3+1],[-1,H3+1],{W:520,H:480,xl:"x in m",yl:"h in m"}),merk:"Verdoppeln von "+M("b")+" verdoppelt hier die Weite, aber die Höhe wächst auf das Vierfache: Höhe ist ein Funktionswert und wächst quadratisch mit.",steps:[
+      {t:"Alter Strahl: Weite "+N(L)+" m, Höhe "+N(H)+" m.",a:function(V){ V.F(BRF,"--ink-3",0,{from:0,to:L}); V.Pt(xv,H,"","--ink-3",.3); }},
+      {t:"Neue Nullstellen.",m:M("x * (-"+N(a)+"x + "+N(b3)+") = 0")+" &nbsp; "+M("x = 0")+" oder "+M("x = "+N(L3)),a:function(V){ V.F(BRF3,"--right",0,{from:0,to:L3}); V.Pt(L3,0,N(L3)+" m","--rise",.6,{dy:-12,dx:-10,anchor:"end"}); }},
+      {t:"Neuer Scheitel in der Mitte.",m:M("-"+N(a)+" * "+N(L)+"^2 + "+N(b3)+" * "+N(L)+" = "+N(H3)),a:function(V){ V.Pt(L,H3,"("+N(L)+" | "+N(H3)+")","--right",0,{dy:-10}); }},
       "Doppelt so weit stimmt. Viermal so hoch statt doppelt so hoch."]} }; }}
-  ]});
+  ]};
+  return T5;
+}
+(function(){
+  var I=tour5(BR_PRE[0]);
+  TOURS.push({id:"g5",title:"Der Springbrunnen im Stadtpark",sub:"Eine Parabel, ihre Nullstellen und ein Kind, das trocken bleiben will",
+    lead:"Eine zusammenhängende Aufgabe zu den Routen 9 und 10, mit Intervallen und Prozentrechnung. Die nächste Teilaufgabe öffnet sich, sobald die vorige gelöst oder ihr Lösungsweg angesehen ist. Tippst du in eine Teilaufgabe, leuchten in der Angabe die Stellen auf, die du dafür brauchst.",
+    angabe:I.angabe,parts:I.parts,vary:function(){ return tour5(pick(BR_PRE)); }});
+})();
+
+/* ============ Probeschularbeit ============
+   16 kurze Aufgaben (Teil 1, je 2 Punkte) und zwei lange (Teil 2, je 8 Punkte), zusammen 48 Punkte.
+   Teil 1 zieht aus den Generatoren aller gewählten Routen, und zwar in den sieben Matura-Formaten.
+   Teil 2 zieht zwei Touren aus verschiedenen Themenblöcken; jede Tour mit vary() erzeugt neue Zahlen.
+   Die Aufgabenkarten sind die normalen taskCard-Karten im Prüfungsmodus (cx.exam). */
+var PCFG={min:100,end:true,tools:false,notes:false,routes:null,cuts:[24,30,36,42]};
+try{ var pcr=JSON.parse(localStorage.getItem(KEY+"-probe")); if(pcr) for(var pck in pcr) PCFG[pck]=pcr[pck]; }catch(e){}
+function pcSave(){ try{ localStorage.setItem(KEY+"-probe",JSON.stringify(PCFG)); }catch(e){} }
+var P1_QUOTA=["1aus5","1aus5","2aus5","2aus5","2aus5","luecke","luecke","2zu4","2zu4","grafisch","grafisch","halboffen","halboffen","halboffen","offen","offen"];
+var P1_W=2, P2_SUM=8;
+var TOUR_RT=[[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[6,7,8],[9,10]], TOUR_GRP=[0,0,0,1,2];
+
+function p1Pool(routes){
+  var pool=[];
+  Object.keys(GEN).forEach(function(k){
+    var g=GEN[k]; if(routes.indexOf(g.ch)<0) return;
+    var mk=[g.make], v=VAR[k]||{}; for(var s in v) mk.push(v[s]);
+    mk.forEach(function(m){
+      var key; try{ key=fmtKey(m()); }catch(e){ return; }
+      if(!MATURA.some(function(x){ return x[0]===key; })) return;
+      pool.push({kind:k,make:m,key:key,ch:g.ch});
+    });
+  });
+  return pool;
+}
+function p1Pick(routes){
+  var pool=p1Pool(routes), out=[], ru={}, ku={};
+  shuffle(P1_QUOTA).forEach(function(key){
+    var c=pool.filter(function(p){ return p.key===key; });
+    if(!c.length) c=pool;
+    var best=null, bs=1e9;
+    shuffle(c).forEach(function(p){ var s=(ru[p.ch]||0)*10+(ku[p.kind]||0)*4+Math.random(); if(s<bs){ bs=s; best=p; } });
+    out.push(best); ru[best.ch]=(ru[best.ch]||0)+1; ku[best.kind]=(ku[best.kind]||0)+1;
+  });
+  return out.sort(function(a,b){ return a.ch-b.ch; });
+}
+function p2Pick(routes){
+  var el=[]; TOURS.forEach(function(T,i){ if(TOUR_RT[i]&&TOUR_RT[i].some(function(r){ return routes.indexOf(r)>=0; })) el.push(i); });
+  if(!el.length) el=TOURS.map(function(T,i){ return i; });
+  var groups={}; el.forEach(function(i){ (groups[TOUR_GRP[i]]=groups[TOUR_GRP[i]]||[]).push(i); });
+  var gk=shuffle(Object.keys(groups)), res=[];
+  gk.slice(0,2).forEach(function(g){ res.push(pick(groups[g])); });
+  if(res.length<2){ var rest=el.filter(function(i){ return res.indexOf(i)<0; }); if(rest.length) res.push(pick(rest)); }
+  return shuffle(res).map(function(i){ return TOURS[i]; });
+}
+function p2Weights(n){ var b=Math.floor(P2_SUM/n), r=P2_SUM-b*n, w=[]; for(var i=0;i<n;i++) w.push(b+(i>=n-r?1:0)); return w; }
+function ptxt(w){ return num(w)+(w===1?" Punkt":" Punkte"); }
+function ptsOf(frac,w){ return frac>=.999?w:(w>=2&&frac>=.5?w/2:0); }
+
+/* eine Probeschularbeit zusammenstellen (nur Daten) */
+function probeBuild(cfg){
+  var routes=cfg.routes&&cfg.routes.length?cfg.routes:CH.map(function(c){ return c.n; });
+  var t1=p1Pick(routes).map(function(p){
+    var sp=p.make(), g=0; while(fmtKey(sp)!==p.key&&g++<20) sp=p.make();
+    return {kind:p.kind,ch:p.ch,sp:sp}; });
+  var t2=p2Pick(routes).map(function(T){
+    var I=T.vary?T.vary():{angabe:T.angabe,parts:T.parts}, w=p2Weights(I.parts.length);
+    return {tour:T,angabe:I.angabe,parts:I.parts.map(function(p,i){ return {title:p.title,note:p.note,w:w[i],sp:p.mk()}; })};
+  });
+  return {cfg:JSON.parse(JSON.stringify(cfg)),t1:t1,t2:t2};
+}
+
+var PS=null;   /* laufende oder fertige Probeschularbeit samt DOM */
+function mmss(ms){ ms=Math.max(0,Math.round(ms/1000)); var m=Math.floor(ms/60), s=ms%60; return m+":"+(s<10?"0":"")+s; }
+function gradeOf(p,cuts){ return p>=cuts[3]?["Sehr gut",1]:p>=cuts[2]?["Gut",2]:p>=cuts[1]?["Befriedigend",3]:p>=cuts[0]?["Genügend",4]:["Nicht genügend",5]; }
+
+function probeStart(D){
+  if(PS&&PS.timer) clearInterval(PS.timer);
+  var cfg=D.cfg, items=[], root=h("div",{class:"probe"});
+  PS={D:D,root:root,items:items,done:false,t0:Date.now(),timer:0};
+  var timerEl=h("span",{class:"ptime"}), bar=h("div",{class:"pbar"}), confHost=h("div",{});
+  function mk(sp,o){
+    var card=taskCard(sp,{lv:"X",kind:o.kind,title:o.title,count:o.count,exam:true,instant:!cfg.end,tools:cfg.tools,
+      score:function(res){ var f=res.ok?1:(res.frac||0); return "<span class='gain'>"+num(ptsOf(f,o.w))+" von "+num(o.w)+" Punkten</span>"; }});
+    card.classList.add("ex");
+    var it={card:card,w:o.w,part:o.part,label:o.label}; items.push(it); return card;
+  }
+  /* Kopf */
+  var kick=h("p",{class:"kicker"},"OpenMath · 5. Klasse AHS · Übungsmodul"), t=h("h1",{},"Probeschularbeit");
+  var total=0; D.t1.forEach(function(){ total+=P1_W; }); total+=D.t2.length*P2_SUM;
+  var sub=h("p",{class:"lead"},"Teil 1: "+D.t1.length+" kurze Aufgaben zu je "+P1_W+" Punkten. Teil 2: "+D.t2.length+" lange Aufgaben zu je "+P2_SUM+" Punkten. Zusammen "+total+" Punkte."+
+    (cfg.min?" Du hast "+cfg.min+" Minuten.":" Übungsmodus ohne Zeitlimit.")+(cfg.end?" Ausgewertet wird erst nach dem Abgeben.":" Jede Aufgabe kannst du gleich auswerten."));
+  var resBox=h("section",{class:"presult",hidden:true});
+  function doneBtn(){
+    clr(confHost);
+    confHost.append(h("div",{class:"pconf"},h("span",{},"Jetzt abgeben? Nicht bearbeitete Aufgaben zählen 0 Punkte."),
+      btn("Ja, abgeben",function(){ finish(false); },"sm prim"),btn("Weiterarbeiten",function(){ clr(confHost); },"sm ghost")));
+  }
+  var giveB=btn("Abgeben",doneBtn,"prim sm"), quitB=btn("Abbrechen",function(){
+    clr(confHost); confHost.append(h("div",{class:"pconf"},h("span",{},"Die Probeschularbeit verwerfen und neu einstellen?"),
+      btn("Ja, verwerfen",function(){ if(PS&&PS.timer) clearInterval(PS.timer); PS=null; route(); },"sm prim"),btn("Weiterarbeiten",function(){ clr(confHost); },"sm ghost"))); },"sm ghost");
+  bar.append(timerEl,h("span",{class:"sp"}),quitB,giveB);
+  root.append(kick,t,sub,bar,confHost,resBox);
+
+  /* Teil 1 */
+  var n=0;
+  root.append(h("h2",{class:"t2h"},"Teil 1 · Kurze Aufgaben"),h("p",{class:"t2l"},"Jede Aufgabe bringt "+P1_W+" Punkte. Ein Punkt gibt es, wenn mindestens die Hälfte stimmt."));
+  var l1=h("div",{class:"tparts"}); root.append(l1);
+  D.t1.forEach(function(q,i){ n++; l1.append(mk(q.sp,{kind:q.kind,title:"Aufgabe "+n,count:ptxt(P1_W),w:P1_W,part:1,label:String(n)})); });
+  /* Teil 2 */
+  root.append(h("h2",{class:"t2h"},"Teil 2 · Lange Aufgaben"),h("p",{class:"t2l"},"Jede Aufgabe bringt "+P2_SUM+" Punkte, verteilt auf ihre Teilaufgaben. Die Teilaufgaben stehen alle offen, du kannst in beliebiger Reihenfolge arbeiten."));
+  D.t2.forEach(function(q){
+    n++;
+    var sec=h("section",{class:"pt2"});
+    var ang=h("section",{class:"angabe"},h("h3",{},"Aufgabe "+n+" · "+q.tour.title),h("div",{class:"atext",html:q.angabe}));
+    if(cfg.notes){ var ul=h("ul",{class:"notes"}); q.parts.forEach(function(p,i){ if(p.note) ul.append(h("li",{html:"<b>"+PL[i]+")</b> "+p.note})); });
+      if(ul.firstChild) ang.append(h("div",{class:"notesbox"},h("b",{},"Zwischenergebnisse"),ul)); }
+    var lst=h("div",{class:"tparts"});
+    q.parts.forEach(function(p,i){ lst.append(mk(p.sp,{kind:null,title:n+" "+PL[i]+")",count:ptxt(p.w),w:p.w,part:2,label:n+PL[i]})); });
+    sec.append(ang,lst); root.append(sec);
+  });
+  var endB=btn("Abgeben",doneBtn,"prim"); root.append(h("div",{class:"pend"},endB));
+  tidy(root);
+
+  /* Zeit */
+  function tick(){
+    if(PS.done) return;
+    if(cfg.min){ var left=cfg.min*60000-(Date.now()-PS.t0); timerEl.textContent="Restzeit "+mmss(left); timerEl.classList.toggle("low",left<10*60000);
+      if(left<=0) finish(true); }
+    else timerEl.textContent="Übungsmodus · "+mmss(Date.now()-PS.t0);
+  }
+  PS.timer=setInterval(tick,1000); tick();
+
+  function score(){
+    var s1=0,s2=0;
+    items.forEach(function(it){
+      var a=it.card.api, R=a.R, f;
+      if(R.twoStep) f=R.frac?R.frac():0; else { var r=a.res(); f=!r?0:(r.ok?1:(r.frac||0)); }
+      it.p=ptsOf(f,it.w); if(it.part===1) s1+=it.p; else s2+=it.p;
+    });
+    return [s1,s2];
+  }
+  function drawResult(auto){
+    var sc=score(), s=sc[0]+sc[1], cuts=cfg.cuts, g=gradeOf(s,cuts), max=total;
+    clr(resBox); resBox.hidden=false;
+    var grid=h("div",{class:"pgrid"});
+    items.forEach(function(it){ var full=it.p>=it.w-1e-9, none=it.p<=0;
+      var a=h("a",{href:"#probe",class:"pc"+(full?" full":none?" none":" half"),title:"Aufgabe "+it.label+": "+num(it.p)+" von "+num(it.w)},h("b",{},it.label),h("span",{},num(it.p)+"/"+num(it.w)));
+      a.addEventListener("click",function(e){ e.preventDefault(); try{ it.card.scrollIntoView({behavior:"smooth",block:"start"}); }catch(x){} });
+      grid.append(a); });
+    if(auto) resBox.append(h("h2",{},"Ergebnis"),h("p",{class:"t2l"},"Die Zeit ist abgelaufen. Die Probeschularbeit wurde automatisch abgegeben."));
+    else resBox.append(h("h2",{},"Ergebnis"));
+    resBox.append(
+      h("div",{class:"pnote"},h("div",{class:"pbig"},num(s),h("small",{}," von "+max+" Punkten")),
+        h("div",{class:"pgr"},g[0]),h("div",{class:"psm"},"Teil 1: "+num(sc[0])+" von "+(D.t1.length*P1_W)+" · Teil 2: "+num(sc[1])+" von "+(D.t2.length*P2_SUM)+" · "+Math.round(s/max*100)+" %")),
+      h("p",{class:"t2l"},"Notenschlüssel: Genügend ab "+cuts[0]+", Befriedigend ab "+cuts[1]+", Gut ab "+cuts[2]+", Sehr gut ab "+cuts[3]+" Punkten."),
+      grid,
+      h("p",{class:"t2l"},"Unter jeder Aufgabe steht die Rückmeldung mit dem Lösungsweg. Offene Antworten bewertest du selbst: Hake in der Musterlösung an, was in deiner Antwort steht. Die Punkte oben ziehen mit."),
+      h("div",{class:"pacts"},btn("Neue Probeschularbeit",function(){ if(PS&&PS.timer) clearInterval(PS.timer); PS=null; route(); },"prim"),
+        btn("Dieselben Aufgaben nochmal",function(){ probeStart(probeClone(D)); route(); },"")));
+  }
+  function finish(auto){
+    if(PS.done) return; PS.done=true; clearInterval(PS.timer); clr(confHost); timerEl.textContent="Abgegeben · "+mmss(Date.now()-PS.t0);
+    giveB.hidden=true; quitB.hidden=true; endB.parentNode.hidden=true;
+    items.forEach(function(it){ it.card.api.finish(); });
+    drawResult(auto); tidy(root);
+    try{ resBox.scrollIntoView({behavior:"smooth",block:"start"}); }catch(x){}
+  }
+  root.addEventListener("change",function(){ if(PS&&PS.done&&PS.root===root) drawResult(false); });
+  PS.finish=finish; PS.score=score;
+  return PS;
+}
+/* gleiche Aufgaben noch einmal, mit frischen Karten */
+function probeClone(D){ return {cfg:D.cfg,t1:D.t1,t2:D.t2}; }
+
+/* Einstellungen und Start */
+function probeSetup(){
+  var C=PCFG, routes=(C.routes&&C.routes.length)?C.routes.slice():CH.map(function(c){ return c.n; });
+  view.append(h("p",{class:"kicker"},"OpenMath · 5. Klasse AHS · Übungsmodul"),h("h1",{},"Probeschularbeit"),
+    h("p",{class:"lead"},"Sechzehn kurze Aufgaben aus dem ganzen Stoff und zwei lange Aufgaben, zusammen 48 Punkte. Die Aufgaben werden bei jedem Start neu zusammengestellt."));
+  var form=h("div",{class:"pform"});
+  function group(title,desc,opts,get,set){
+    var seg=h("div",{class:"seg",role:"group","aria-label":title}), bs=[];
+    opts.forEach(function(o){ var b=h("button",{type:"button","aria-pressed":"false"},o[0]); b.addEventListener("click",function(){ set(o[1]); upd(); pcSave(); }); bs.push([b,o[1]]); seg.append(b); });
+    function upd(){ bs.forEach(function(x){ x[0].setAttribute("aria-pressed",String(get()===x[1])); }); }
+    upd();
+    form.append(h("div",{class:"prow"},h("div",{},h("b",{},title),h("span",{class:"pd"},desc)),seg));
+  }
+  group("Zeit","100 Minuten wie bei einer Schularbeit, oder unbegrenzt zum Üben.",[["100 Minuten",100],["Ohne Zeitlimit",0]],function(){ return C.min; },function(v){ C.min=v; });
+  group("Auswertung","Entweder erst nach dem Abgeben oder bei jeder Aufgabe sofort.",[["Am Ende",true],["Nach jeder Aufgabe",false]],function(){ return C.end; },function(v){ C.end=v; });
+  group("Tipps und Werkzeuge","Bei einer Schularbeit gibt es sie nicht.",[["Aus",false],["Ein",true]],function(){ return C.tools; },function(v){ C.tools=v; });
+  group("Zwischenergebnisse in Teil 2","Mit Zwischenergebnissen hängen die Teilaufgaben nicht voneinander ab.",[["Nein",false],["Ja",true]],function(){ return C.notes; },function(v){ C.notes=v; });
+  /* Routen */
+  var chips=h("div",{class:"kinds",role:"group","aria-label":"Routen"}), cbs={};
+  CH.forEach(function(c){ var b=h("button",{class:"kind lvL",type:"button","aria-pressed":routes.indexOf(c.n)>=0?"true":"false"},h("span",{},c.n+" · "+c.t));
+    b.addEventListener("click",function(){ var i=routes.indexOf(c.n); if(i>=0){ if(routes.length>1) routes.splice(i,1); } else routes.push(c.n);
+      C.routes=routes.slice(); b.setAttribute("aria-pressed",routes.indexOf(c.n)>=0?"true":"false"); pcSave(); });
+    cbs[c.n]=b; chips.append(b); });
+  form.append(h("div",{class:"prow col"},h("div",{},h("b",{},"Stoff"),h("span",{class:"pd"},"Aus diesen Routen kommen die Aufgaben. Teil 2 wählt dazu passende Touren.")),chips));
+  /* Notenschlüssel */
+  var cuts=h("div",{class:"pcuts"});
+  ["Genügend ab","Befriedigend ab","Gut ab","Sehr gut ab"].forEach(function(lb,i){
+    var inp=h("input",{type:"number",min:"0",max:"48",value:String(C.cuts[i]),"aria-label":lb});
+    inp.addEventListener("input",function(){ var v=parseFloat(inp.value); if(isFinite(v)){ C.cuts[i]=v; pcSave(); } });
+    cuts.append(h("label",{},h("span",{},lb),inp,h("span",{},"Punkte")));
+  });
+  form.append(h("div",{class:"prow col"},h("div",{},h("b",{},"Notenschlüssel"),h("span",{class:"pd"},"Von 48 Punkten. Du kannst die Grenzen ändern.")),cuts));
+  view.append(form,h("div",{class:"pstart"},btn("Probeschularbeit erstellen",function(){
+    C.routes=routes.slice(); pcSave();
+    var cfg={min:C.min,end:C.end,tools:C.tools,notes:C.notes,routes:routes.slice(),cuts:C.cuts.slice()};
+    probeStart(probeBuild(cfg)); route();
+  },"prim")));
+}
+function probeView(){
+  if(PS){ view.append(PS.root); return; }
+  probeSetup();
+}
 
 /* ============ Fortschritt ============ */
 /* Reihenfolge der Matura-Etappen: zuerst je ein Vertreter der sieben Formate, danach der Rest in der Reihenfolge der Datei */
@@ -9042,6 +9422,7 @@ function drawNav(cur){
   var lv2=h("div",{class:"lv"});
   TOURS.forEach(function(T,i){ var a=h("a",{href:"#"+T.id,class:"lvX"},"Tour "+(i+1)); if(cur&&cur.tour===i) a.setAttribute("aria-current","page"); lv2.append(a); });
   li2.append(lv2); navList.append(li2);
+  navList.append(h("li",{},h("a",{class:"rt-h",href:"#probe"},h("span",{class:"n"},"SA"),h("span",{},"Probeschularbeit"),h("span",{class:"c"},PS?(PS.done?"fertig":"läuft"):""))));
 }
 rail.append(
   h("a",{class:"brand",href:"#start"},
@@ -9072,6 +9453,7 @@ function home(){
   var a=hmAll();
   view.append(h("p",{class:"kicker"},"OpenMath · 5. Klasse AHS · Übungsmodul"),h("h1",{},"Höhenmeter"),
     h("p",{class:"lead"},"Zehn Routen durch die Kapitel der 5. Klasse. Jede beginnt flach, wird steiler und endet mit Aufgaben in den sieben Antwortformaten der Matura. Wer festhängt, holt sich einen Tipp, probiert mit einem Werkzeug herum oder lässt sich den Lösungsweg Schritt für Schritt zeigen."));
+  view.append(h("section",{class:"probecta"},h("div",{},h("b",{},"Probeschularbeit"),h("span",{},"16 kurze Aufgaben (Teil 1) und 2 lange (Teil 2), 48 Punkte, 100 Minuten. Bei jedem Start neu gemischt.")),h("a",{class:"btn prim",href:"#probe"},"Probeschularbeit erstellen")));
   var grid=h("div",{class:"routes"}), grid2=h("div",{class:"routes"}), grid3=h("div",{class:"routes"});
   CH.forEach(function(c){
     var hm=hmOf(c.n), r=resume(c.n);
@@ -9269,6 +9651,7 @@ function route(){
   if(onLeave){ onLeave(); onLeave=null; }
   clr(view); document.body.classList.remove("menu"); onResize=null;
   drawTotal();
+  if(hsh==="probe"){ drawNav(null); probeView(); try{ window.scrollTo(0,0); }catch(e){} return; }
   var gm=/^g(\d)$/.exec(hsh);
   if(gm&&TOURS[+gm[1]-1]){ drawNav({tour:+gm[1]-1}); tourView(+gm[1]-1); try{ window.scrollTo(0,0); }catch(e){} return; }
   if(m&&BY[+m[1]]){
@@ -9281,9 +9664,10 @@ function route(){
   try{ window.scrollTo(0,0); }catch(e){}
 }
 window.addEventListener("hashchange",route);
-window.OM={TOURS:TOURS,TASKS:TASKS,GEN:GEN,VAR:VAR,sigOf:sigOf,moreMake:moreMake,trainMake:trainMake,BY:BY,HELP:HELP,MATURA:MATURA,fmtKey:fmtKey,taskCard:taskCard,TE:TE,route:route,M:M,setZ:setZ,setFs:setFs};
+window.OM={probeBuild:probeBuild,probeStart:probeStart,probeSetup:probeSetup,getPS:function(){ return PS; },p1Pool:p1Pool,PCFG:PCFG,TOURS:TOURS,TASKS:TASKS,GEN:GEN,VAR:VAR,sigOf:sigOf,moreMake:moreMake,trainMake:trainMake,BY:BY,HELP:HELP,MATURA:MATURA,fmtKey:fmtKey,taskCard:taskCard,TE:TE,route:route,M:M,setZ:setZ,setFs:setFs};
 route();
 })();
 
 </script>
+
 </body></html>
